@@ -1,0 +1,41 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_solo
+
+platforms:
+  - name: ubuntu-14.04
+
+suites:
+  - name: default
+    run_list:
+      - [ "recipe[inaturalist-cookbook::default]" ]
+    attributes:
+  - name: development
+    run_list:
+      - [ "recipe[inaturalist-cookbook::default]", "recipe[inaturalist-cookbook::development]", "recipe[inaturalist-cookbook::_development_config]" ]
+    attributes: {
+      postgresql: {
+        password: {
+          postgres: "0928743rwhf0834fh"
+        }
+      },
+      rvm: {
+        user_installs: [ {
+          user: "vagrant",
+          rubies: [ "ruby-1.9.3" ],
+          default_ruby: "ruby-1.9.3",
+          vagrant: {
+            system_chef_solo: "/usr/bin/chef-solo"
+          }
+        } ]
+      },
+      authorization: {
+        sudo: {
+          users: [ 'vagrant' ],
+          passwordless: true
+        }
+      }
+    }

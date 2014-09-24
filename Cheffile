@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+
+site 'https://supermarket.getchef.com/api/v1'
+
+cookbook 'inaturalist-cookbook', path: '.'
+cookbook 'git'
+cookbook 'postgresql', '~> 3.4.1'
+cookbook 'apt'
+cookbook 'sudo'
+cookbook 'vim'
+cookbook 'rvm', git: 'git://github.com/fnichol/chef-rvm.git', ref: 'v0.9.0'
+cookbook 'git'
+cookbook 'curl'
+cookbook 'build-essential'

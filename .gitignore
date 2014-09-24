@@ -1,0 +1,8 @@
+.kitchen/
+.kitchen.local.yml
+kitchen.yml
+.librarian
+.ruby-gemset
+.ruby-version
+cookbooks
+tmp
