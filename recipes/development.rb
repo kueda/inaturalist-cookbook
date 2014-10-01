@@ -22,7 +22,7 @@ include_recipe "rvm::user"
 include_recipe "postgresql::server"
 include_recipe "postgresql::client"
 
-%w(postgis postgresql-9.3-postgis-2.1 nodejs libgeos-dev libgeos++-dev zip gdal-bin).each do |pkg|
+%w(postgis postgresql-9.3-postgis-2.1 nodejs libgeos-dev libgeos++-dev zip gdal-bin default-jre memcached vim).each do |pkg|
   package pkg
 end
 
