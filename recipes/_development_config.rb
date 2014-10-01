@@ -56,7 +56,7 @@ script "edit_database_yml" do
   cwd "/home/vagrant/rails/inaturalist"
   code <<-EOH
   sed -i 's/you/postgres/' /home/vagrant/rails/inaturalist/config/database.yml
-  sed -i 's/template_postgis/template_postgis\\\n  password: 0928743rwhf0834fh/' /home/vagrant/rails/inaturalist/config/database.yml
+  sed -i 's/template_postgis/template_postgis\\\n  password: vagrantpostgrespw/' /home/vagrant/rails/inaturalist/config/database.yml
   EOH
   action :nothing
 end

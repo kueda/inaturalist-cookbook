@@ -19,7 +19,7 @@ suites:
     attributes: {
       postgresql: {
         password: {
-          postgres: "0928743rwhf0834fh"
+          postgres: "vagrantpostgrespw"
         }
       },
       rvm: {
