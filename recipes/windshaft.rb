@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: inaturalist-cookbook
-# Recipe:: varnish
+# Recipe:: windshaft
 #
 # Copyright 2014, iNaturalist
 #
@@ -59,4 +59,12 @@ template "/home/vagrant/windshaft/config.js" do
   source "config.js.erb"
   owner "vagrant"
   group "vagrant"
+end
+
+nodejs_npm "forever"
+
+template "/etc/init/windshaft.conf" do
+  source "windshaft.conf.erb"
+  owner "root"
+  group "root"
 end

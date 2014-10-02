@@ -17,12 +17,10 @@
 # limitations under the License.
 #
 
-include_recipe "sudo"
 include_recipe "rvm::user"
-include_recipe "postgresql::server"
 include_recipe "postgresql::client"
 
-%w(postgis postgresql-9.3-postgis-2.1 nodejs libgeos-dev libgeos++-dev zip gdal-bin default-jre memcached vim).each do |pkg|
+%w(nodejs libgeos-dev libgeos++-dev zip gdal-bin default-jre memcached vim).each do |pkg|
   package pkg
 end
 
@@ -32,12 +30,12 @@ directory "/home/vagrant/rails" do
 end
 
 git "/home/vagrant/rails/inaturalist" do
-  repository "https://github.com/pleary/inaturalist.git"
-  reference "specs"
+  repository "https://github.com/inaturalist/inaturalist.git"
+  reference "master"
   action :sync
   user "vagrant"
   group "vagrant"
-  notifies :run, 'script[install_dependencies]', :immediately
+  notifies :run, 'script[install_wkhtmltopdf]', :immediately
 end
 
 file "/home/vagrant/rails/inaturalist/.ruby-version" do
@@ -58,7 +56,7 @@ template "/home/vagrant/.rspec" do
   group "vagrant"
 end
 
-script "install_dependencies" do
+script "install_wkhtmltopdf" do
   interpreter "bash"
   user "vagrant"
   cwd "/home/vagrant"
@@ -67,13 +65,14 @@ script "install_dependencies" do
   tar xvjf wkhtmltopdf-0.9.9-static-amd64.tar.bz2
   sudo mv wkhtmltopdf-amd64 /usr/local/bin/wkhtmltopdf
   sudo chmod +x /usr/local/bin/wkhtmltopdf
-  sudo -u postgres createdb template_postgis
-  sudo -u postgres psql template_postgis -c "UPDATE pg_database SET datistemplate = TRUE WHERE datname = 'template_postgis'"
-  sudo -u postgres psql template_postgis < /usr/share/postgresql/9.3/contrib/postgis-2.1/postgis.sql
-  sudo -u postgres psql template_postgis < /usr/share/postgresql/9.3/contrib/postgis-2.1/spatial_ref_sys.sql
   EOH
-  not_if do
-    File.exist?("/usr/local/bin/wkhtmltopdf")
-  end
+  not_if { File.exists?("/usr/local/bin/wkhtmltopdf") }
   action :nothing
+end
+
+rvm_shell "bundle-install" do
+  ruby_string "ruby-1.9.3@inaturalist"
+  user "vagrant"
+  cwd "/home/vagrant/rails/inaturalist"
+  code "bundle install"
 end

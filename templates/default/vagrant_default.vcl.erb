@@ -139,7 +139,7 @@ sub vcl_deliver {
   unset resp.http.X-Powered-By;
   unset resp.http.Via;
   unset resp.http.X-Varnish;
-  unset resp.http.X-Tiler-Profile;
+  unset resp.http.X-Tiler-Profiler;
   unset resp.http.X-Windshaft-Cache;
 }
 
@@ -177,5 +177,3 @@ sub vcl_backend_response {
 
   return (deliver);
 }
-
-

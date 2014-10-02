@@ -17,26 +17,31 @@
 # limitations under the License.
 #
 
-execute "cp /home/vagrant/rails/inaturalist/config/config.yml.example /home/vagrant/rails/inaturalist/config/config.yml" do
-  only_if { File.exist?("/home/vagrant/rails/inaturalist/config/config.yml.example") }
+execute "sudo -u vagrant cp /home/vagrant/rails/inaturalist/config/config.yml.example /home/vagrant/rails/inaturalist/config/config.yml" do
+  only_if { File.exists?("/home/vagrant/rails/inaturalist/config/config.yml.example") }
+  not_if { File.exists?("/home/vagrant/rails/inaturalist/config/config.yml") }
   notifies :run, 'script[edit_config_yml]', :delayed
 end
 
-execute "cp /home/vagrant/rails/inaturalist/config/database.yml.example /home/vagrant/rails/inaturalist/config/database.yml" do
-  only_if { File.exist?("/home/vagrant/rails/inaturalist/config/database.yml.example") }
+execute "sudo -u vagrant cp /home/vagrant/rails/inaturalist/config/database.yml.example /home/vagrant/rails/inaturalist/config/database.yml" do
+  only_if { File.exists?("/home/vagrant/rails/inaturalist/config/database.yml.example") }
+  not_if { File.exists?("/home/vagrant/rails/inaturalist/config/database.yml") }
   notifies :run, 'script[edit_database_yml]', :delayed
 end
 
-execute "cp /home/vagrant/rails/inaturalist/config/gmaps_api_key.yml.example /home/vagrant/rails/inaturalist/config/gmaps_api_key.yml" do
-  only_if { File.exist?("/home/vagrant/rails/inaturalist/config/gmaps_api_key.yml.example") }
+execute "sudo -u vagrant cp /home/vagrant/rails/inaturalist/config/gmaps_api_key.yml.example /home/vagrant/rails/inaturalist/config/gmaps_api_key.yml" do
+  only_if { File.exists?("/home/vagrant/rails/inaturalist/config/gmaps_api_key.yml.example") }
+  not_if { File.exists?("/home/vagrant/rails/inaturalist/config/gmaps_api_key.yml") }
 end
 
-execute "cp /home/vagrant/rails/inaturalist/config/smtp.yml.example /home/vagrant/rails/inaturalist/config/smtp.yml" do
-  only_if { File.exist?("/home/vagrant/rails/inaturalist/config/smtp.yml.example") }
+execute "sudo -u vagrant cp /home/vagrant/rails/inaturalist/config/smtp.yml.example /home/vagrant/rails/inaturalist/config/smtp.yml" do
+  only_if { File.exists?("/home/vagrant/rails/inaturalist/config/smtp.yml.example") }
+  not_if { File.exists?("/home/vagrant/rails/inaturalist/config/smtp.yml") }
 end
 
-execute "cp /home/vagrant/rails/inaturalist/config/sphinx.yml.example /home/vagrant/rails/inaturalist/config/sphinx.yml" do
-  only_if { File.exist?("/home/vagrant/rails/inaturalist/config/sphinx.yml.example") }
+execute "sudo -u vagrant cp /home/vagrant/rails/inaturalist/config/sphinx.yml.example /home/vagrant/rails/inaturalist/config/sphinx.yml" do
+  only_if { File.exists?("/home/vagrant/rails/inaturalist/config/sphinx.yml.example") }
+  not_if { File.exists?("/home/vagrant/rails/inaturalist/config/sphinx.yml") }
 end
 
 script "edit_config_yml" do
@@ -47,6 +52,8 @@ script "edit_config_yml" do
   sed -i 's/http:\\\/\\\/www\\\.yoursite\\\.com/http:\\\/\\\/localhost:3000/g' /home/vagrant/rails/inaturalist/config/config.yml
   sed -i 's/yourbucketname/staticdev\\\.inaturalist\\\.org/g' /home/vagrant/rails/inaturalist/config/config.yml
   EOH
+  only_if { File.exists?("/home/vagrant/rails/inaturalist/config/config.yml") }
+  not_if "grep staticdev /home/vagrant/rails/inaturalist/config/config.yml"
   action :nothing
 end
 
@@ -55,8 +62,24 @@ script "edit_database_yml" do
   user "vagrant"
   cwd "/home/vagrant/rails/inaturalist"
   code <<-EOH
-  sed -i 's/you/postgres/' /home/vagrant/rails/inaturalist/config/database.yml
-  sed -i 's/template_postgis/template_postgis\\\n  password: vagrantpostgrespw/' /home/vagrant/rails/inaturalist/config/database.yml
+  sed -i 's/host: localhost/host: 192.168.50.7/' /home/vagrant/rails/inaturalist/config/database.yml
+  sed -i 's/username: you/username: postgres/' /home/vagrant/rails/inaturalist/config/database.yml
+  sed -i 's/template_postgis/template_postgis\\\n  password: #{node[:postgresql][:password][:postgres]}/' /home/vagrant/rails/inaturalist/config/database.yml
+  EOH
+  only_if { File.exists?("/home/vagrant/rails/inaturalist/config/database.yml") }
+  not_if "grep #{node[:postgresql][:password][:postgres]} /home/vagrant/rails/inaturalist/config/database.yml"
+  action :nothing
+  notifies :run, 'rvm_shell[create_databases]', :immediate
+end
+
+
+rvm_shell "create_databases" do
+  ruby_string "ruby-1.9.3@inaturalist"
+  user "vagrant"
+  cwd "/home/vagrant/rails/inaturalist"
+  code <<-EOH
+  rake db:setup
+  rake db:setup RAILS_ENV=test
   EOH
   action :nothing
 end
