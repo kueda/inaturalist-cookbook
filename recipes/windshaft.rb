@@ -49,9 +49,10 @@ end
 
 script "npm_install" do
   interpreter "bash"
+  environment 'HOME' => "/home/vagrant"
   user "vagrant"
   cwd "/home/vagrant/windshaft"
-  code "sudo npm install"
+  code "npm install"
   action :nothing
 end
 
