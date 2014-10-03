@@ -44,16 +44,6 @@ git "/home/vagrant/windshaft" do
   action :sync
   user "vagrant"
   group "vagrant"
-  notifies :run, 'script[npm_install]', :immediately
-end
-
-script "npm_install" do
-  interpreter "bash"
-  environment 'HOME' => "/home/vagrant"
-  user "vagrant"
-  cwd "/home/vagrant/windshaft"
-  code "npm install"
-  action :nothing
 end
 
 template "/home/vagrant/windshaft/config.js" do
