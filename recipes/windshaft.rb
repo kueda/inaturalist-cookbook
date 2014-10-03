@@ -38,7 +38,13 @@ end
   package pkg
 end
 
-git "/home/vagrant/windshaft" do
+directory "/vagrant/shared/nodejs" do
+  owner "vagrant"
+  group "vagrant"
+  recursive true
+end
+
+git "/vagrant/shared/nodejs/windshaft" do
   repository "https://github.com/pleary/Windshaft-inaturalist.git"
   reference "vagrant_test"
   action :sync
@@ -46,7 +52,7 @@ git "/home/vagrant/windshaft" do
   group "vagrant"
 end
 
-template "/home/vagrant/windshaft/config.js" do
+template "/vagrant/shared/nodejs/windshaft/config.js" do
   source "config.js.erb"
   owner "vagrant"
   group "vagrant"

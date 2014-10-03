@@ -24,12 +24,13 @@ include_recipe "postgresql::client"
   package pkg
 end
 
-directory "/home/vagrant/rails" do
+directory "/vagrant/shared/rails" do
   owner "vagrant"
   group "vagrant"
+  recursive true
 end
 
-git "/home/vagrant/rails/inaturalist" do
+git "/vagrant/shared/rails/inaturalist" do
   repository "https://github.com/inaturalist/inaturalist.git"
   reference "master"
   action :sync
@@ -38,13 +39,13 @@ git "/home/vagrant/rails/inaturalist" do
   notifies :run, 'script[install_wkhtmltopdf]', :immediately
 end
 
-file "/home/vagrant/rails/inaturalist/.ruby-version" do
+file "/vagrant/shared/rails/inaturalist/.ruby-version" do
   content "ruby-1.9.3"
   owner "vagrant"
   group "vagrant"
 end
 
-file "/home/vagrant/rails/inaturalist/.ruby-gemset" do
+file "/vagrant/shared/rails/inaturalist/.ruby-gemset" do
   content "inaturalist"
   owner "vagrant"
   group "vagrant"
@@ -73,6 +74,6 @@ end
 rvm_shell "bundle-install" do
   ruby_string "ruby-1.9.3@inaturalist"
   user "vagrant"
-  cwd "/home/vagrant/rails/inaturalist"
+  cwd "/vagrant/shared/rails/inaturalist"
   code "bundle install"
 end
