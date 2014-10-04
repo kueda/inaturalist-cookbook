@@ -1,68 +1,25 @@
-inaturalist-cookbook Cookbook
-================
-TODO: Enter the cookbook description here.
+# inaturalist-cookbook
 
-e.g.
-This cookbook makes your favorite breakfast sandwhich.
+## Description
 
-Requirements
-------------
-TODO: List your cookbook requirements. Be sure to include any requirements this cookbook has on platforms, libraries, other cookbooks, packages, operating systems, etc.
+Chef recipes needed to build development and production machines for [iNaturalist](http://www.inaturalist.org/)
 
-e.g.
-#### packages
-- `toaster` - inaturalist-cookbook needs toaster to brown your bagel.
+## Recipes
 
-Attributes
-----------
-TODO: List you cookbook attributes here.
+### default
 
-e.g.
-#### inaturalist-cookbook::default
-<table>
-  <tr>
-    <th>Key</th>
-    <th>Type</th>
-    <th>Description</th>
-    <th>Default</th>
-  </tr>
-  <tr>
-    <td><tt>['inaturalist-cookbook']['bacon']</tt></td>
-    <td>Boolean</td>
-    <td>whether to include bacon</td>
-    <td><tt>true</tt></td>
-  </tr>
-</table>
+Installs some basic system packages such as Vim, git, curl
 
-Usage
------
-#### inaturalist-cookbook::default
-TODO: Write usage instructions for each cookbook.
+### database
 
-e.g.
-Just include `inaturalist-cookbook` in your node's `run_list`:
+Installs PostgreSQL and postgis, and bootstraps a postgis template. This recipe can also create and import a copy of the database when used with Vagrant. If there is a PostgreSQL dump file named `inaturalist_production.csql` in root directory of the [iNaturalist Vagrant](https://github.com/pleary/inaturalist-vagrant) codebase, it will be imported to a new database named `inaturalist_production`.
 
-```json
-{
-  "name":"my_node",
-  "run_list": [
-    "recipe[inaturalist-cookbook]"
-  ]
-}
-```
+### development, _development_config
 
-Contributing
-------------
-TODO: (optional) If this is a public cookbook, detail the process for contributing. If this is a private cookbook, remove this section.
+Installs RVM and the version of Ruby that the [iNaturalist Ruby on Rails codebase](https://github.com/inaturalist/inaturalist) currently requires, as well as all other dependencies. It then checks out the master branch of the [inaturalist](https://github.com/inaturalist/inaturalist) repo, updates Rails configuration files, and runs a `bundle install`.
 
-e.g.
-1. Fork the repository on Github
-2. Create a named feature branch (like `add_component_x`)
-3. Write you change
-4. Write tests for your change (if applicable)
-5. Run the tests, ensuring they all pass
-6. Submit a Pull Request using Github
+This recipe is primarily used with [iNaturalist Vagrant](https://github.com/pleary/inaturalist-vagrant) configuration to create development machines with VirtualBox.
 
-License and Authors
--------------------
-Authors: TODO: List authors
+### windshaft
+
+Installs nodejs, mapnik, and all other dependencies needed to run the [iNaturalist Windshaft](https://github.com/inaturalist/Windshaft-inaturalist) application. Windshaft will be installed as a service and can be started with `sudo start windshaft`. This also installs Varnish and configures it to cache all requests both tiles and metadata.
