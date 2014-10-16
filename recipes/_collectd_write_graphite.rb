@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: inaturalist-cookbook
-# Recipe:: default
+# Recipe:: _collectd_write_graphite
 #
 # Copyright 2014, iNaturalist
 #
@@ -16,3 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+collectd_plugin "write_graphite" do
+  template "write_graphite.conf.erb"
+end

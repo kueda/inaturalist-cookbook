@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: inaturalist-cookbook
-# Recipe:: default
+# Recipe:: collectd_server
 #
 # Copyright 2014, iNaturalist
 #
@@ -16,3 +16,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+include_recipe "collectd::server"
+include_recipe "collectd::collectd_web"
+include_recipe "collectd_plugins"
+include_recipe "collectd_plugins::load"
+
+template "/etc/apache2/sites-available/collectd_web.conf" do
+  source "collectd_web.conf.erb"
+  owner "root"
+  group "root"
+  mode "644"
+end
+
+package "apache2-utils"
+
+apache_site "collectd_web"
+
+apache_module "cgi"
+
+collectd_plugin "write_graphite" do
+  template "write_graphite.conf.erb"
+end
+
+collectd_plugin "logfile" do
+  options log_level: "info", file: "/var/log/collectd.log", timestamp: true
+end

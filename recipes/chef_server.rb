@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: inaturalist-cookbook
-# Recipe:: default
+# Recipe:: chef_server
 #
 # Copyright 2014, iNaturalist
 #
@@ -16,3 +16,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+include_recipe "chef-server"

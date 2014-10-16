@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: inaturalist-cookbook
-# Recipe:: default
+# Recipe:: collectd_client
 #
 # Copyright 2014, iNaturalist
 #
@@ -16,3 +16,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+include_recipe "collectd::client"
+include_recipe "collectd_plugins"
+include_recipe "collectd_plugins::load"
+
+collectd_plugin "logfile" do
+  options log_level: "info", file: "/var/log/collectd.log", timestamp: true
+end

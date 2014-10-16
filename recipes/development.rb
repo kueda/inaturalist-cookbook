@@ -36,7 +36,7 @@ git "/vagrant/shared/rails/inaturalist" do
   action :sync
   user "vagrant"
   group "vagrant"
-  notifies :run, 'script[install_wkhtmltopdf]', :immediately
+  notifies :run, "script[install_wkhtmltopdf]", :immediately
 end
 
 file "/vagrant/shared/rails/inaturalist/.ruby-version" do

@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: inaturalist-cookbook
-# Recipe:: default
+# Recipe:: _sensu_check_ram
 #
 # Copyright 2014, iNaturalist
 #
@@ -16,3 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+cookbook_file "/etc/sensu/plugins/check-ram.rb" do
+  source "plugins/check-ram.rb"
+  mode 0755
+end

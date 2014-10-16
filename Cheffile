@@ -1,16 +1,23 @@
 #!/usr/bin/env ruby
 
-site 'https://supermarket.getchef.com/api/v1'
+site "https://supermarket.getchef.com/api/v1"
 
-cookbook 'inaturalist-cookbook', path: '.'
-cookbook 'git'
-cookbook 'postgresql', '~> 3.4.1'
-cookbook 'apt'
-cookbook 'sudo'
-cookbook 'vim'
-cookbook 'rvm', git: 'git://github.com/fnichol/chef-rvm.git', ref: 'v0.9.0'
-cookbook 'git'
-cookbook 'curl'
-cookbook 'build-essential'
-cookbook 'disable_ipv6', git: 'git://github.com/rackspace-cookbooks/varnish.git', path: 'test/fixtures/cookbooks/disable_ipv6'
-cookbook 'varnish', git: 'git://github.com/rackspace-cookbooks/varnish.git'
+cookbook "inaturalist-cookbook", path: "."
+cookbook "git"
+cookbook "postgresql", "~> 3.4.1"
+cookbook "apt"
+cookbook "sudo"
+cookbook "vim"
+cookbook "git"
+cookbook "curl"
+cookbook "build-essential"
+cookbook "apache2"
+cookbook "rvm", git: "git://github.com/fnichol/chef-rvm.git", ref: "v0.9.0"
+cookbook "disable_ipv6", git: "git://github.com/rackspace-cookbooks/varnish.git", path: "test/fixtures/cookbooks/disable_ipv6"
+cookbook "varnish", git: "git://github.com/rackspace-cookbooks/varnish.git"
+cookbook "nodejs", git: "git://github.com/redguide/nodejs.git"
+cookbook "chef-client", git: "git://github.com/JeanMertz/chef-client.git", ref: "chef_server_12_user"
+cookbook "collectd", git: "https://github.com/coderanger/chef-collectd.git"
+cookbook "collectd_plugins", git: "https://github.com/Shopify/chef-collectd_plugins.git"
+cookbook "statsd", git: "git://github.com/librato/statsd-cookbook.git"
+cookbook "monitor", git: "git://github.com/portertech/chef-monitor.git"

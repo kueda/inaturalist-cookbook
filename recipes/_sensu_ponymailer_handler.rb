@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: inaturalist-cookbook
-# Recipe:: default
+# Recipe:: _sensu_ponymailer_handler
 #
 # Copyright 2014, iNaturalist
 #
@@ -16,3 +16,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+sensu_gem "pony"
+
+cookbook_file "/etc/sensu/handlers/ponymailer.rb" do
+  source "handlers/ponymailer.rb"
+  mode 0755
+end
+
+sensu_handler "ponymailer" do
+  type "pipe"
+  command "ponymailer.rb"
+  severities [ "ok", "critical","warning" ]
+end
+
+sensu_snippet "ponymailer" do
+  content(
+    :authenticate => false,
+    :tls => false,
+    :port => 25,
+    :fromname => node["monitor"]["from_name"],
+    :hostname => node["monitor"]["from_host"],
+    :from => node["monitor"]["from_email"],
+    :recipients => node["monitor"]["email_recipients"])
+end

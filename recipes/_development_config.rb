@@ -20,13 +20,13 @@
 execute "sudo -u vagrant cp /vagrant/shared/rails/inaturalist/config/config.yml.example /vagrant/shared/rails/inaturalist/config/config.yml" do
   only_if { File.exists?("/vagrant/shared/rails/inaturalist/config/config.yml.example") }
   not_if { File.exists?("/vagrant/shared/rails/inaturalist/config/config.yml") }
-  notifies :run, 'script[edit_config_yml]', :delayed
+  notifies :run, "script[edit_config_yml]", :delayed
 end
 
 execute "sudo -u vagrant cp /vagrant/shared/rails/inaturalist/config/database.yml.example /vagrant/shared/rails/inaturalist/config/database.yml" do
   only_if { File.exists?("/vagrant/shared/rails/inaturalist/config/database.yml.example") }
   not_if { File.exists?("/vagrant/shared/rails/inaturalist/config/database.yml") }
-  notifies :run, 'script[edit_database_yml]', :delayed
+  notifies :run, "script[edit_database_yml]", :delayed
 end
 
 execute "sudo -u vagrant cp /vagrant/shared/rails/inaturalist/config/gmaps_api_key.yml.example /vagrant/shared/rails/inaturalist/config/gmaps_api_key.yml" do
@@ -69,7 +69,7 @@ script "edit_database_yml" do
   only_if { File.exists?("/vagrant/shared/rails/inaturalist/config/database.yml") }
   not_if "grep #{node[:postgresql][:password][:postgres]} /vagrant/shared/rails/inaturalist/config/database.yml"
   action :nothing
-  notifies :run, 'rvm_shell[create_databases]', :immediate
+  notifies :run, "rvm_shell[create_databases]", :immediate
 end
 
 

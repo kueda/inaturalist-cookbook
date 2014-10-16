@@ -1,0 +1,34 @@
+<VirtualHost *:<%= @node[:collectd][:collectd_web][:port] %>>
+    ServerName <%= @node[:collectd][:collectd_web][:hostname] %>
+
+    DocumentRoot <%= @node[:collectd][:collectd_web][:path] %>
+    <Directory />
+        Options FollowSymLinks
+        AllowOverride None
+    </Directory>
+    <Directory <%= @node[:collectd][:collectd_web][:path] %>>
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride AuthConfig
+        AuthType Basic
+        AuthName "collectd-web"
+        AuthBasicProvider file
+        AuthUserFile /etc/apache2/passwd/passwords
+        Require user collectd
+    </Directory>
+
+    ScriptAlias /cgi-bin/ <%= @node[:collectd][:collectd_web][:path] %>/cgi-bin/
+    <Directory "<%= @node[:collectd][:collectd_web][:path] %>/cgi-bin">
+        AllowOverride None
+        Options +ExecCGI -MultiViews
+        Require all granted
+    </Directory>
+
+    ErrorLog /var/log/apache2/error.log
+
+    # Possible values include: debug, info, notice, warn, error, crit,
+    # alert, emerg.
+    LogLevel warn
+
+    CustomLog /var/log/apache2/access.log combined
+    ServerSignature On
+</VirtualHost>

@@ -29,9 +29,9 @@ include_recipe "redisio::enable"
   package pkg
 end
 
-apt_repository 'mapnik' do
-  uri 'ppa:mapnik/nightly-2.3'
-  distribution 'trusty'
+apt_repository "mapnik" do
+  uri "ppa:mapnik/nightly-2.3"
+  distribution "trusty"
 end
 
 %w(libmapnik libmapnik-dev mapnik-utils python-mapnik mapnik-input-plugin-postgis).each do |pkg|

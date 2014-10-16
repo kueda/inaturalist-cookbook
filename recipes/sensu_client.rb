@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: inaturalist-cookbook
-# Recipe:: default
+# Recipe:: sensu_client
 #
 # Copyright 2014, iNaturalist
 #
@@ -16,3 +16,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+include_recipe "monitor"
+include_recipe "inaturalist-cookbook::_sensu_ponymailer_handler"
+include_recipe "inaturalist-cookbook::_sensu_slack_handler"
+include_recipe "inaturalist-cookbook::_sensu_check_disk"
+include_recipe "inaturalist-cookbook::_sensu_check_load"
+include_recipe "inaturalist-cookbook::_sensu_check_ram"

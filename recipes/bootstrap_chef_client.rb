@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: inaturalist-cookbook
-# Recipe:: default
+# Recipe:: bootstrap_chef_client
 #
 # Copyright 2014, iNaturalist
 #
@@ -16,3 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+include_recipe "chef-client::delete_validation"
+include_recipe "chef-client::config"
+include_recipe "chef-client::service"

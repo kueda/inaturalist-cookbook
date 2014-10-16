@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: inaturalist-cookbook
-# Recipe:: default
+# Recipe:: bootstrap_system
 #
 # Copyright 2014, iNaturalist
 #
@@ -16,3 +16,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+include_recipe "apt"
+include_recipe "omnibus_updater"
+include_recipe "sudo"
+include_recipe "vim"
+include_recipe "git"
+include_recipe "curl"
+include_recipe "timezone"
+include_recipe "build-essential"
