@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: inaturalist-cookbook
-# Recipe:: _sensu_check_load
+# Recipe:: users
 #
 # Copyright 2014, iNaturalist
 #
@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-cookbook_file "/etc/sensu/plugins/check-load.rb" do
-  source "sensu/plugins/check-load.rb"
-  mode 0755
+users_manage "sysadmin" do
+  group_id 2300
+  action [ :remove, :create ]
 end

@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: inaturalist-cookbook
-# Recipe:: _sensu_check_load
+# Recipe:: _sensu_graphite_handler
 #
 # Copyright 2014, iNaturalist
 #
@@ -17,7 +17,10 @@
 # limitations under the License.
 #
 
-cookbook_file "/etc/sensu/plugins/check-load.rb" do
-  source "sensu/plugins/check-load.rb"
-  mode 0755
+if @node[:monitor] && @node[:monitor][:graphite_address]
+  sensu_handler "graphite" do
+    type "tcp"
+    mutator "only_check_output"
+    socket "host" => @node[:monitor][:graphite_address], "port" => @node[:monitor][:graphite_port].to_i
+  end
 end

@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: inaturalist-cookbook
-# Recipe:: _sensu_check_load
+# Recipe:: _sensu_check_disk
 #
 # Copyright 2014, iNaturalist
 #
@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-cookbook_file "/etc/sensu/plugins/check-load.rb" do
-  source "sensu/plugins/check-load.rb"
+cookbook_file "/etc/sensu/plugins/metrics-vmstat.rb" do
+  source "sensu/plugins/metrics-vmstat.rb"
   mode 0755
 end

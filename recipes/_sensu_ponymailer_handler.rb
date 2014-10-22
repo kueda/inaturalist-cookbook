@@ -20,7 +20,7 @@
 sensu_gem "pony"
 
 cookbook_file "/etc/sensu/handlers/ponymailer.rb" do
-  source "handlers/ponymailer.rb"
+  source "sensu/handlers/ponymailer.rb"
   mode 0755
 end
 

@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: inaturalist-cookbook
-# Recipe:: _sensu_check_load
+# Recipe:: _sensu_remediation_handler
 #
 # Copyright 2014, iNaturalist
 #
@@ -17,7 +17,13 @@
 # limitations under the License.
 #
 
-cookbook_file "/etc/sensu/plugins/check-load.rb" do
-  source "sensu/plugins/check-load.rb"
+cookbook_file "/etc/sensu/handlers/remediation.rb" do
+  source "sensu/handlers/remediation.rb"
   mode 0755
+end
+
+sensu_handler "remediation" do
+  type "pipe"
+  command "remediation.rb"
+  severities [ "critical", "warning" ]
 end

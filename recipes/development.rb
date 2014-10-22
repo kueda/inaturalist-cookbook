@@ -51,8 +51,8 @@ file "/vagrant/shared/rails/inaturalist/.ruby-gemset" do
   group "vagrant"
 end
 
-template "/home/vagrant/.rspec" do
-  source "rspec.erb"
+cookbook_file "/home/vagrant/.rspec" do
+  source "rspec"
   owner "vagrant"
   group "vagrant"
 end

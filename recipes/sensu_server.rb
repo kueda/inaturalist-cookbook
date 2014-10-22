@@ -17,10 +17,10 @@
 # limitations under the License.
 #
 
+# make sure the node subscribes to itself. This is used for the 
+# remediation handler which sends remediation checks to the host name
+node.set["monitor"]["additional_client_attributes"]["subscriptions"] =
+  node["roles"] + [ "all" ] + [ node.name ]
 include_recipe "postfix::server"
 include_recipe "monitor::master"
-include_recipe "inaturalist-cookbook::_sensu_ponymailer_handler"
-include_recipe "inaturalist-cookbook::_sensu_slack_handler"
-include_recipe "inaturalist-cookbook::_sensu_check_disk"
-include_recipe "inaturalist-cookbook::_sensu_check_load"
-include_recipe "inaturalist-cookbook::_sensu_check_ram"
+include_recipe "inaturalist-cookbook::_sensu_checks_and_handlers"

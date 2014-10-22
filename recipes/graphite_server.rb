@@ -34,8 +34,8 @@ directory "#{ node['apache']['dir'] }/run" do
   group node["apache"]["group"]
 end
 
-template "#{ node['apache']['dir'] }/sites-available/graphite.conf" do
-  source "graphite-vhost.conf.erb"
+cookbook_file "#{ node['apache']['dir'] }/sites-available/graphite.conf" do
+  source "graphite/apache-vhost.conf"
   notifies :reload, "service[apache2]"
 end
 
@@ -169,3 +169,7 @@ runit_service "graphite-web" do
   cookbook "graphite"
   default_logger true
 end
+
+package "default-jdk"
+include_recipe "elasticsearch"
+include_recipe "grafana"

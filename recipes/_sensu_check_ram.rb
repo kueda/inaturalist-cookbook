@@ -18,6 +18,6 @@
 #
 
 cookbook_file "/etc/sensu/plugins/check-ram.rb" do
-  source "plugins/check-ram.rb"
+  source "sensu/plugins/check-ram.rb"
   mode 0755
 end

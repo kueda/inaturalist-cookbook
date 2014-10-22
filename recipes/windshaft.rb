@@ -60,8 +60,8 @@ end
 
 nodejs_npm "forever"
 
-template "/etc/init/windshaft.conf" do
-  source "windshaft.conf.erb"
+cookbook_file "/etc/init/windshaft.conf" do
+  source "windshaft/windshaft.conf"
   owner "root"
   group "root"
 end

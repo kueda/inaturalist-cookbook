@@ -18,7 +18,7 @@
 #
 
 cookbook_file "/etc/sensu/handlers/slack.rb" do
-  source "handlers/slack.rb"
+  source "sensu/handlers/slack.rb"
   mode 0755
 end
 

@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: inaturalist-cookbook
-# Recipe:: _sensu_check_load
+# Recipe:: _sensu_check_chef_nodes
 #
 # Copyright 2014, iNaturalist
 #
@@ -17,7 +17,9 @@
 # limitations under the License.
 #
 
-cookbook_file "/etc/sensu/plugins/check-load.rb" do
-  source "sensu/plugins/check-load.rb"
+sensu_gem "chef"
+
+cookbook_file "/etc/sensu/plugins/check-chef-nodes.rb" do
+  source "sensu/plugins/check-chef-nodes.rb"
   mode 0755
 end

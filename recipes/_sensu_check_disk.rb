@@ -18,6 +18,6 @@
 #
 
 cookbook_file "/etc/sensu/plugins/check-disk.rb" do
-  source "plugins/check-disk.rb"
+  source "sensu/plugins/check-disk.rb"
   mode 0755
 end
