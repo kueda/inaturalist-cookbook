@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: inaturalist-cookbook
-# Recipe:: sensu_server
+# Recipe:: sensu
 #
 # Copyright 2014, iNaturalist
 #
@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-include_recipe "inaturalist-cookbook::sensu"
-include_recipe "postfix::server"
-include_recipe "monitor::master"
-include_recipe "inaturalist-cookbook::_sensu_checks_and_handlers"
+# make sure the node subscribes to itself. This is used for the 
+# remediation handler which sends remediation checks to the host name
+node.set["monitor"]["additional_client_attributes"]["subscriptions"] =
+  node["roles"] + [ "all" ] + [ node.name ]

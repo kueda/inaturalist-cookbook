@@ -70,8 +70,8 @@ graphite_carbon_cache "default" do
             enable_logrotation: true,
             user: "graphite",
             max_cache_size: "inf",
-            max_updates_per_second: 500,
-            max_creates_per_minute: 50,
+            max_updates_per_second: 5000,
+            max_creates_per_minute: 2000,
             line_receiver_interface: "0.0.0.0",
             line_receiver_port: 2003,
             udp_receiver_port: 2003,
@@ -86,17 +86,17 @@ graphite_carbon_cache "default" do
           })
 end
 
-graphite_storage_schema "carbon" do
+graphite_storage_schema "schema_a" do
   config ({
-            pattern: "^carbon\.",
-            retentions: "60:90d"
+            pattern: "timers.*performance",
+            retentions: "1m:7d,10m:60d,1h:1y"
           })
 end
 
-graphite_storage_schema "default_1min_for_1day" do
+graphite_storage_schema "schema_b" do
   config ({
             pattern: ".*",
-            retentions: "60s:1d"
+            retentions: "1m:7d,10m:60d,1h:1y"
           })
 end
 

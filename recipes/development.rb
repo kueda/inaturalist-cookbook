@@ -17,50 +17,65 @@
 # limitations under the License.
 #
 
-include_recipe "rvm::user"
 include_recipe "postgresql::client"
 
 %w(nodejs libgeos-dev libgeos++-dev zip gdal-bin default-jre memcached vim).each do |pkg|
   package pkg
 end
 
-directory "/vagrant/shared/rails" do
-  owner "vagrant"
-  group "vagrant"
+group node["inaturalist"]["group"] do
+  system true
+  action :create
+end
+
+user node["inaturalist"]["user"] do
+  supports :manage_home => true
+  group node["inaturalist"]["group"]
+  home "/home/#{ node["inaturalist"]["user"] }"
+  shell "/bin/bash"
+  action :create
+end
+
+include_recipe "rvm::user"
+
+directory node["inaturalist"]["install_directory"] do
+  owner node["inaturalist"]["user"]
+  group node["inaturalist"]["group"]
+  action :create
   recursive true
 end
 
-git "/vagrant/shared/rails/inaturalist" do
-  repository "https://github.com/inaturalist/inaturalist.git"
-  reference "master"
+git node["inaturalist"]["install_directory"] do
+  repository node["inaturalist"]["git_repo"]
+  reference node["inaturalist"]["git_reference"]
   action :sync
-  user "vagrant"
-  group "vagrant"
+  user node["inaturalist"]["user"]
+  group node["inaturalist"]["group"]
   notifies :run, "script[install_wkhtmltopdf]", :immediately
 end
 
-file "/vagrant/shared/rails/inaturalist/.ruby-version" do
-  content "ruby-1.9.3"
-  owner "vagrant"
-  group "vagrant"
+file "#{ node["inaturalist"]["install_directory"] }/.ruby-version" do
+  content node["rvm"]["user_installs"].first["rubies"].first
+  owner node["inaturalist"]["user"]
+  group node["inaturalist"]["group"]
 end
 
-file "/vagrant/shared/rails/inaturalist/.ruby-gemset" do
+file "#{ node["inaturalist"]["install_directory"] }/.ruby-gemset" do
   content "inaturalist"
-  owner "vagrant"
-  group "vagrant"
+  owner node["inaturalist"]["user"]
+  group node["inaturalist"]["group"]
 end
 
-cookbook_file "/home/vagrant/.rspec" do
+cookbook_file "/home/#{ node["inaturalist"]["user"] }/.rspec" do
   source "rspec"
-  owner "vagrant"
-  group "vagrant"
+  owner node["inaturalist"]["user"]
+  group node["inaturalist"]["group"]
 end
 
 script "install_wkhtmltopdf" do
   interpreter "bash"
-  user "vagrant"
-  cwd "/home/vagrant"
+  user "root"
+  cwd "/tmp"
   code <<-EOH
   wget http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.9.9-static-amd64.tar.bz2
   tar xvjf wkhtmltopdf-0.9.9-static-amd64.tar.bz2
@@ -72,8 +87,10 @@ script "install_wkhtmltopdf" do
 end
 
 rvm_shell "bundle-install" do
-  ruby_string "ruby-1.9.3@inaturalist"
-  user "vagrant"
-  cwd "/vagrant/shared/rails/inaturalist"
+  ruby_string node["rvm"]["user_installs"].first["default_ruby"]
+  user node["inaturalist"]["user"]
+  cwd node["inaturalist"]["install_directory"]
   code "bundle install"
 end
+
+include_recipe "inaturalist-cookbook::_development_config"

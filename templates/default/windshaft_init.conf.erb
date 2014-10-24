@@ -12,7 +12,7 @@ expect fork
 respawn
 respawn limit 5 30
 
-env HOME="/home/vagrant"
+env HOME="/home/<%= node["windshaft"]["user"] %>"
 
 # Node paths (change to suit your installation)
 # The full path to the directory containing the node and forever binaries.
@@ -22,7 +22,7 @@ env NODE_BIN_DIR="/usr/bin"
 env NODE_PATH="/usr/lib/node_modules"
 
 # The main file that starts our app (usually called server.js or app.js)
-env APPLICATION_PATH="/vagrant/shared/nodejs/windshaft/app.js"
+env APPLICATION_PATH="<%= node["windshaft"]["install_directory"] %>/app.js"
 
 # Process ID file path
 env PIDFILE="/var/run/windshaft.pid"

@@ -1,4 +1,3 @@
-<% inat = node[:inaturalist] %>
 // Example config file for the windshaft server
 // Fill with the appropiate values and rename to config.js
 
@@ -11,35 +10,23 @@ config.redis = {};
 
 // database connection params
 // The database user
-config.database.user = '<%=
-  (inat && inat[:postgres_user]) ? inat[:postgres_user] : 'postgres'
-%>';
+config.database.user = '<%= node["windshaft"]["db"]["user"] %>';
 // IP address or name of the postgresql database server
-config.database.host = '<%=
-  (inat && inat[:postgres_host]) ? inat[:postgres_host] : '127.0.0.1'
-%>';
+config.database.host = '<%= node["windshaft"]["db"]["host"] %>';
 // Port in which the postgresql instance listens for connections
-config.database.port = <%=
-  (inat && inat[:postgres_port]) ? inat[:postgres_port] : '5432'
-%>;
+config.database.port = <%= node["windshaft"]["db"]["port"] %>;
 // Name of the geometry field
 config.database.geometry_field = 'geom';
 // Spatial reference system id
 config.database.srid = 4326;
 // Postgresql database name
-config.database.database_name = '<%=
-  (inat && inat[:postgres_database]) ?
-    inat[:postgres_database] :
-    'inaturalist'
-%>';
+config.database.database_name = '<%= node["windshaft"]["db"]["database"] %>';
 
 // redis-server params
 config.redis.host = '127.0.0.1';
 config.redis.port = 6379;
 
 // debugging
-config.debug = <%=
-  (inat && inat[:debug]) ? 'true' : 'false';
-%>;
+config.debug = <%= node["windshaft"]["db"]["debug"] ? "true" : "false" %>;
 
 module.exports = config;

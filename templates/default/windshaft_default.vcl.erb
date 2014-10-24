@@ -64,7 +64,7 @@ sub vcl_recv {
   } /* We only deal with GET and HEAD by default */
 
   # Pass requests from logged-in users directly.
-  if (req.http.Authorization || req.http.Cookie) {
+  if (req.http.Authorization) {
     return(pass);
   } /* Not cacheable by default */
 
@@ -145,15 +145,6 @@ sub vcl_deliver {
 
 # Called after a document has been successfully retrieved from the backend.
 sub vcl_backend_response {
-
-  # set minimum timeouts to auto-discard stored objects
-  # set beresp.prefetch = -30s;
-  # set beresp.grace = 120s;
-
-  # if (beresp.ttl < 48h) {
-  #   set beresp.uncacheable = true;
-  #   return (deliver);
-  # }
 
   if (!beresp.ttl > 0s) {
     set beresp.uncacheable = true;

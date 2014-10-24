@@ -17,22 +17,24 @@
 # limitations under the License.
 #
 
-cookbook_file "/etc/sensu/handlers/slack.rb" do
-  source "sensu/handlers/slack.rb"
-  mode 0755
-end
+if node["monitor"]["slack"]
+  cookbook_file "/etc/sensu/handlers/slack.rb" do
+    source "sensu/handlers/slack.rb"
+    mode 0755
+  end
 
-sensu_handler "slack" do
-  type "pipe"
-  command "slack.rb"
-  severities [ "ok", "critical","warning" ]
-end
+  sensu_handler "slack" do
+    type "pipe"
+    command "slack.rb"
+    severities [ "ok", "critical","warning" ]
+  end
 
-sensu_snippet "slack" do
-  content(
-    :token => node["monitor"]["slack"]["token"],
-    :channel => node["monitor"]["slack"]["channel"],
-    :team_name => node["monitor"]["slack"]["team_name"],
-    :bot_name => node["monitor"]["slack"]["bot_name"]
-  )
+  sensu_snippet "slack" do
+    content(
+      :token => node["monitor"]["slack"]["token"],
+      :channel => node["monitor"]["slack"]["channel"],
+      :team_name => node["monitor"]["slack"]["team_name"],
+      :bot_name => node["monitor"]["slack"]["bot_name"]
+    )
+  end
 end

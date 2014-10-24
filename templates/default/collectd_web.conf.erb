@@ -1,12 +1,12 @@
-<VirtualHost *:<%= @node[:collectd][:collectd_web][:port] %>>
-    ServerName <%= @node[:collectd][:collectd_web][:hostname] %>
+<VirtualHost *:<%= node[:collectd][:collectd_web][:port] %>>
+    ServerName <%= node[:collectd][:collectd_web][:hostname] %>
 
-    DocumentRoot <%= @node[:collectd][:collectd_web][:path] %>
+    DocumentRoot <%= node[:collectd][:collectd_web][:path] %>
     <Directory />
         Options FollowSymLinks
         AllowOverride None
     </Directory>
-    <Directory <%= @node[:collectd][:collectd_web][:path] %>>
+    <Directory <%= node[:collectd][:collectd_web][:path] %>>
         Options Indexes FollowSymLinks MultiViews
         AllowOverride AuthConfig
         AuthType Basic
@@ -16,8 +16,8 @@
         Require user collectd
     </Directory>
 
-    ScriptAlias /cgi-bin/ <%= @node[:collectd][:collectd_web][:path] %>/cgi-bin/
-    <Directory "<%= @node[:collectd][:collectd_web][:path] %>/cgi-bin">
+    ScriptAlias /cgi-bin/ <%= node[:collectd][:collectd_web][:path] %>/cgi-bin/
+    <Directory "<%= node[:collectd][:collectd_web][:path] %>/cgi-bin">
         AllowOverride None
         Options +ExecCGI -MultiViews
         Require all granted

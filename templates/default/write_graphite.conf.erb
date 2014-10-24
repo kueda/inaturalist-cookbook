@@ -1,8 +1,8 @@
 LoadPlugin "write_graphite"
 <Plugin "write_graphite">
   <Carbon>
-    Host "<%= @node[:monitor][:graphite_address] %>"
-    Port "<%= @node[:monitor][:graphite_port] %>"
+    Host "<%= node[:monitor][:graphite_address] %>"
+    Port "<%= node[:monitor][:graphite_port] %>"
     Prefix "collectd."
     Protocol "udp"
     EscapeCharacter "_"

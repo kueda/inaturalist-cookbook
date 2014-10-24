@@ -17,10 +17,10 @@
 # limitations under the License.
 #
 
-if @node[:monitor] && @node[:monitor][:graphite_address]
+if node[:monitor] && node[:monitor][:graphite_address]
   sensu_handler "graphite" do
     type "tcp"
     mutator "only_check_output"
-    socket "host" => @node[:monitor][:graphite_address], "port" => @node[:monitor][:graphite_port].to_i
+    socket "host" => node[:monitor][:graphite_address], "port" => node[:monitor][:graphite_port].to_i
   end
 end

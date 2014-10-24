@@ -17,51 +17,70 @@
 # limitations under the License.
 #
 
-include_recipe "sudo"
-include_recipe "postgresql::client"
-include_recipe "varnish"
-include_recipe "nodejs"
-include_recipe "nodejs::npm"
-include_recipe "redisio"
-include_recipe "redisio::enable"
+if node["windshaft"]["install_directory"]
 
-%w(postgis postgresql-9.3-postgis-2.1 nodejs libgeos-dev libgeos++-dev zip gdal-bin default-jre memcached vim nodejs).each do |pkg|
-  package pkg
-end
+  include_recipe "postgresql::client"
+  include_recipe "varnish"
+  include_recipe "nodejs"
+  include_recipe "nodejs::npm"
+  include_recipe "redisio"
+  include_recipe "redisio::enable"
 
-apt_repository "mapnik" do
-  uri "ppa:mapnik/nightly-2.3"
-  distribution "trusty"
-end
+  %w(postgis postgresql-9.3-postgis-2.1 nodejs libgeos-dev libgeos++-dev zip
+     gdal-bin default-jre memcached vim nodejs).each do |pkg|
+    package pkg
+  end
 
-%w(libmapnik libmapnik-dev mapnik-utils python-mapnik mapnik-input-plugin-postgis).each do |pkg|
-  package pkg
-end
+  apt_repository "mapnik" do
+    uri "ppa:mapnik/nightly-2.3"
+    distribution "trusty"
+  end
 
-directory "/vagrant/shared/nodejs" do
-  owner "vagrant"
-  group "vagrant"
-  recursive true
-end
+  %w(libmapnik libmapnik-dev mapnik-utils python-mapnik
+     mapnik-input-plugin-postgis).each do |pkg|
+    package pkg
+  end
 
-git "/vagrant/shared/nodejs/windshaft" do
-  repository "https://github.com/pleary/Windshaft-inaturalist.git"
-  reference "vagrant_test"
-  action :sync
-  user "vagrant"
-  group "vagrant"
-end
+  group node["windshaft"]["group"] do
+    system true
+    action :create
+  end
 
-template "/vagrant/shared/nodejs/windshaft/config.js" do
-  source "config.js.erb"
-  owner "vagrant"
-  group "vagrant"
-end
+  user node["windshaft"]["user"] do
+    supports :manage_home => true
+    group node["windshaft"]["group"]
+    home "/home/#{ node["windshaft"]["user"] }"
+    shell "/bin/bash"
+    action :create
+  end
 
-nodejs_npm "forever"
+  directory node["windshaft"]["install_directory"] do
+    owner node["windshaft"]["user"]
+    group node["windshaft"]["group"]
+    action :create
+    recursive true
+  end
 
-cookbook_file "/etc/init/windshaft.conf" do
-  source "windshaft/windshaft.conf"
-  owner "root"
-  group "root"
+  git node["windshaft"]["install_directory"] do
+    repository node["windshaft"]["git_repo"]
+    reference node["windshaft"]["git_reference"]
+    action :sync
+    user node["windshaft"]["user"]
+    group node["windshaft"]["group"]
+  end
+
+  template "#{ node["windshaft"]["install_directory"] }/config.js" do
+    source "windshaft_config.js.erb"
+    owner node["windshaft"]["user"]
+    group node["windshaft"]["group"]
+  end
+
+  nodejs_npm "forever"
+
+  template "/etc/init/windshaft.conf" do
+    source "windshaft_init.conf.erb"
+    owner "root"
+    group "root"
+  end
+
 end
