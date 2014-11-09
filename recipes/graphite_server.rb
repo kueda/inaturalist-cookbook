@@ -93,7 +93,7 @@ graphite_storage_schema "schema_a" do
           })
 end
 
-graphite_storage_schema "schema_b" do
+graphite_storage_schema "schemab" do
   config ({
             pattern: ".*",
             retentions: "1m:7d,10m:60d,1h:1y"
@@ -171,5 +171,4 @@ runit_service "graphite-web" do
 end
 
 package "default-jdk"
-include_recipe "elasticsearch"
 include_recipe "grafana"

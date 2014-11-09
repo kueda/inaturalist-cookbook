@@ -5,8 +5,17 @@
 var config = {};
 
 // Config sections
+config.application = { };
 config.database = {};
 config.redis = {};
+
+// Port which the node.js application will run on
+config.application.listen_port = 4000;
+// How many threads should be created to handle tile requests
+config.application.number_of_threads = 1; // require("os").cpus().length;
+config.application.max_zoom_level_for_grids = 12;
+config.application.min_zoom_level_for_points = 9;
+config.application.cache_control = "public, max-age=3600";
 
 // database connection params
 // The database user
@@ -21,10 +30,12 @@ config.database.geometry_field = 'geom';
 config.database.srid = 4326;
 // Postgresql database name
 config.database.database_name = '<%= node["windshaft"]["db"]["database"] %>';
+// Postgresql database name
+config.database.password = '<%= node["windshaft"]["db"]["password"] %>';
 
 // redis-server params
-config.redis.host = '127.0.0.1';
-config.redis.port = 6379;
+config.redis.host = '<%= node["windshaft"]["redis"]["host"] %>';
+config.redis.port = <%= node["windshaft"]["redis"]["port"] %>;
 
 // debugging
 config.debug = <%= node["windshaft"]["db"]["debug"] ? "true" : "false" %>;

@@ -21,9 +21,47 @@ include_recipe "inaturalist-cookbook::_sensu_ponymailer_handler"
 include_recipe "inaturalist-cookbook::_sensu_slack_handler"
 include_recipe "inaturalist-cookbook::_sensu_remediation_handler"
 include_recipe "inaturalist-cookbook::_sensu_graphite_handler"
-include_recipe "inaturalist-cookbook::_sensu_check_disk"
-include_recipe "inaturalist-cookbook::_sensu_check_load"
-include_recipe "inaturalist-cookbook::_sensu_check_ram"
-include_recipe "inaturalist-cookbook::_sensu_check_swap"
-include_recipe "inaturalist-cookbook::_sensu_check_chef_nodes"
-include_recipe "inaturalist-cookbook::_sensu_metrics_vmstat"
+
+# check-chef-nodes
+sensu_gem "chef"
+cookbook_file "/etc/sensu/plugins/check-chef-nodes.rb" do
+  source "sensu/plugins/check-chef-nodes.rb"
+  mode 0755
+end
+
+# check-disk
+cookbook_file "/etc/sensu/plugins/check-disk.rb" do
+  source "sensu/plugins/check-disk.rb"
+  mode 0755
+end
+
+# check-load
+cookbook_file "/etc/sensu/plugins/check-load.rb" do
+  source "sensu/plugins/check-load.rb"
+  mode 0755
+end
+
+# check-ram
+cookbook_file "/etc/sensu/plugins/check-ram.rb" do
+  source "sensu/plugins/check-ram.rb"
+  mode 0755
+end
+
+# check-swap
+cookbook_file "/etc/sensu/plugins/check-swap.rb" do
+  source "sensu/plugins/check-swap.rb"
+  mode 0755
+end
+
+# metrics-postgresql
+sensu_gem "pg"
+cookbook_file "/etc/sensu/plugins/metrics-postgresql.rb" do
+  source "sensu/plugins/metrics-postgresql.rb"
+  mode 0755
+end
+
+# metrics-vmstat
+cookbook_file "/etc/sensu/plugins/metrics-vmstat.rb" do
+  source "sensu/plugins/metrics-vmstat.rb"
+  mode 0755
+end

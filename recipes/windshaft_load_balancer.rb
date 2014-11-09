@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: inaturalist-cookbook
-# Recipe:: _sensu_check_disk
+# Recipe:: windshaft_load_balancer
 #
 # Copyright 2014, iNaturalist
 #
@@ -17,7 +17,6 @@
 # limitations under the License.
 #
 
-cookbook_file "/etc/sensu/plugins/check-disk.rb" do
-  source "sensu/plugins/check-disk.rb"
-  mode 0755
-end
+include_recipe "varnish"
+include_recipe "redisio"
+include_recipe "redisio::enable"

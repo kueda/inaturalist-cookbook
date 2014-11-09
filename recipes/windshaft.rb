@@ -20,11 +20,8 @@
 if node["windshaft"]["install_directory"]
 
   include_recipe "postgresql::client"
-  include_recipe "varnish"
   include_recipe "nodejs"
   include_recipe "nodejs::npm"
-  include_recipe "redisio"
-  include_recipe "redisio::enable"
 
   %w(postgis postgresql-9.3-postgis-2.1 nodejs libgeos-dev libgeos++-dev zip
      gdal-bin default-jre memcached vim nodejs).each do |pkg|
@@ -36,8 +33,8 @@ if node["windshaft"]["install_directory"]
     distribution "trusty"
   end
 
-  %w(libmapnik libmapnik-dev mapnik-utils python-mapnik
-     mapnik-input-plugin-postgis).each do |pkg|
+  %w(libmapnik libmapnik-dev mapnik-utils python-mapnik mapnik-input-plugin-postgis
+     libprotobuf8 libprotobuf-dev protobuf-compiler).each do |pkg|
     package pkg
   end
 
@@ -73,6 +70,7 @@ if node["windshaft"]["install_directory"]
     source "windshaft_config.js.erb"
     owner node["windshaft"]["user"]
     group node["windshaft"]["group"]
+    not_if { File.exists?("#{ node["windshaft"]["install_directory"] }/config.js") }
   end
 
   nodejs_npm "forever"

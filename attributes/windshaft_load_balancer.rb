@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: inaturalist-cookbook
-# Recipe:: _sensu_check_load
+# Attributes:: windshaft_load_balancer
 #
 # Copyright 2014, iNaturalist
 #
@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-cookbook_file "/etc/sensu/plugins/check-load.rb" do
-  source "sensu/plugins/check-load.rb"
-  mode 0755
-end
+default["varnish"] ||= { }
+default["varnish"]["listen_port"] = 80
+default["varnish"]["vcl_cookbook"] = "inaturalist-cookbook"
+default["varnish"]["vcl_source"] = "windshaft_default.vcl.erb"

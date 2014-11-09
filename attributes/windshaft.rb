@@ -17,17 +17,12 @@
 # limitations under the License.
 #
 
-default["varnish"] ||= { }
-default["varnish"]["listen_port"] = 80
-default["varnish"]["vcl_cookbook"] = "inaturalist-cookbook"
-default["varnish"]["vcl_source"] = "windshaft_default.vcl.erb"
-
 default["windshaft"] ||= { }
 default["windshaft"]["git_repo"] = "https://github.com/inaturalist/Windshaft-inaturalist.git"
 default["windshaft"]["git_reference"] = "master"
-default["windshaft"]["user"] = "windshaft"
-default["windshaft"]["group"] = "windshaft"
-default["windshaft"]["install_directory"] = "/home/windshaft/windshaft"
+default["windshaft"]["user"] = "inaturalist"
+default["windshaft"]["group"] = "inaturalist"
+default["windshaft"]["install_directory"] = "/home/inaturalist/windshaft"
 
 default["windshaft"]["db"] = { }
 default["windshaft"]["db"]["database"] = "inaturalist"
@@ -36,3 +31,7 @@ default["windshaft"]["db"]["password"] = nil
 default["windshaft"]["db"]["host"] = "127.0.0.1"
 default["windshaft"]["db"]["port"] = 5432
 default["windshaft"]["db"]["debug"] = false
+
+default["windshaft"]["redis"] = { }
+default["windshaft"]["redis"]["host"] = "127.0.0.1"
+default["windshaft"]["redis"]["port"] = 6379

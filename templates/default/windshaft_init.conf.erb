@@ -25,14 +25,17 @@ env NODE_PATH="/usr/lib/node_modules"
 env APPLICATION_PATH="<%= node["windshaft"]["install_directory"] %>/app.js"
 
 # Process ID file path
-env PIDFILE="/var/run/windshaft.pid"
+env PIDFILE="/home/inaturalist/windshaft/windshaft.pid"
 
 # Log file path
-env LOG="/var/log/windshaft.log"
+env LOG="/home/inaturalist/windshaft/windshaft.log"
 
 # Forever settings to prevent the application spinning up constantly if it fails on launch.
 env MIN_UPTIME="5000"
 env SPIN_SLEEP_TIME="2000"
+
+setuid inaturalist
+setgid inaturalist
 
 script
   # Add our Node stuff to the main path

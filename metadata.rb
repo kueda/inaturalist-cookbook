@@ -4,7 +4,7 @@ maintainer_email "patrick.r.leary@gmail.com"
 license          "Apache 2.0"
 description      "Installs/Configures inaturalist-cookbook"
 long_description IO.read(File.join(File.dirname(__FILE__), "README.md"))
-version          "0.1.3"
+version          "0.1.4"
 
 %w( git
     postgresql
@@ -31,7 +31,6 @@ version          "0.1.3"
     monitor
     postfix
     users
-    grafana
-    elasticsearch).each do |cb|
+    grafana).each do |cb|
   depends cb
 end
