@@ -1,3 +1,5 @@
+var fs = require('fs');
+
 // Example config file for the windshaft server
 // Fill with the appropiate values and rename to config.js
 
@@ -12,7 +14,6 @@ config.redis = {};
 // Port which the node.js application will run on
 config.application.listen_port = 4000;
 // How many threads should be created to handle tile requests
-config.application.number_of_threads = 1; // require("os").cpus().length;
 config.application.max_zoom_level_for_grids = 12;
 config.application.min_zoom_level_for_points = 9;
 config.application.cache_control = "public, max-age=3600";
@@ -32,6 +33,12 @@ config.database.srid = 4326;
 config.database.database_name = '<%= node["windshaft"]["db"]["database"] %>';
 // Postgresql database name
 config.database.password = '<%= node["windshaft"]["db"]["password"] %>';
+<%- if node["windshaft"]["db"]["ssl"] && node["windshaft"]["db"]["ssl"]["key_path"] && node["windshaft"]["db"]["ssl"]["cert_path"] -%>
+config.database.ssl = {
+    key: fs.readFileSync('<%= node["windshaft"]["db"]["ssl"]["key_path"] %>'),
+    cert: fs.readFileSync('<%= node["windshaft"]["db"]["ssl"]["cert_path"] %>')
+};
+<%- end -%>
 
 // redis-server params
 config.redis.host = '<%= node["windshaft"]["redis"]["host"] %>';

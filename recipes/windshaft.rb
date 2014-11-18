@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+include_recipe "inaturalist-cookbook::inaturalist_user"
+
 if node["windshaft"]["install_directory"]
 
   include_recipe "postgresql::client"
@@ -79,6 +81,27 @@ if node["windshaft"]["install_directory"]
     source "windshaft_init.conf.erb"
     owner "root"
     group "root"
+  end
+
+  cookbook_file "#{ node["windshaft"]["install_directory"] }/node_modules.tar.gz" do
+    source "windshaft_node_modules.tar.gz"
+    owner node["windshaft"]["user"]
+    group node["windshaft"]["group"]
+    not_if { Dir.exists?("#{ node["windshaft"]["install_directory"] }/node_modules") }
+    notifies :run, "script[uncompress_node_modules]", :immediately
+  end
+
+  script "uncompress_node_modules" do
+    interpreter "bash"
+    user node["windshaft"]["user"]
+    cwd node["windshaft"]["install_directory"]
+    code <<-EOH
+    tar -zxf node_modules.tar.gz
+    rm #{ node["windshaft"]["install_directory"] }/node_modules.tar.gz
+    EOH
+    only_if { File.exists?("#{ node["windshaft"]["install_directory"] }/node_modules.tar.gz") }
+    not_if { Dir.exists?("#{ node["windshaft"]["install_directory"] }/node_modules") }
+    action :nothing
   end
 
 end

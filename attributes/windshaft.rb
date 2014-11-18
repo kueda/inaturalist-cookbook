@@ -31,6 +31,9 @@ default["windshaft"]["db"]["password"] = nil
 default["windshaft"]["db"]["host"] = "127.0.0.1"
 default["windshaft"]["db"]["port"] = 5432
 default["windshaft"]["db"]["debug"] = false
+default["windshaft"]["db"]["ssl"] = { }
+default["windshaft"]["db"]["ssl"]["key_path"] = nil
+default["windshaft"]["db"]["ssl"]["cert_path"] = nil
 
 default["windshaft"]["redis"] = { }
 default["windshaft"]["redis"]["host"] = "127.0.0.1"

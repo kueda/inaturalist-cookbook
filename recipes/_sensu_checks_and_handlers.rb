@@ -35,6 +35,12 @@ cookbook_file "/etc/sensu/plugins/check-disk.rb" do
   mode 0755
 end
 
+# check-graphite-data
+cookbook_file "/etc/sensu/plugins/check-graphite-data.rb" do
+  source "sensu/plugins/check-graphite-data.rb"
+  mode 0755
+end
+
 # check-load
 cookbook_file "/etc/sensu/plugins/check-load.rb" do
   source "sensu/plugins/check-load.rb"
@@ -50,13 +56,6 @@ end
 # check-swap
 cookbook_file "/etc/sensu/plugins/check-swap.rb" do
   source "sensu/plugins/check-swap.rb"
-  mode 0755
-end
-
-# metrics-postgresql
-sensu_gem "pg"
-cookbook_file "/etc/sensu/plugins/metrics-postgresql.rb" do
-  source "sensu/plugins/metrics-postgresql.rb"
   mode 0755
 end
 
