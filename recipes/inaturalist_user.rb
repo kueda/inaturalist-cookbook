@@ -31,47 +31,45 @@ user "inaturalist" do
 end
 
 begin
+  unless Chef::Config[:solo]
+    postgresql = Chef::EncryptedDataBagItem.load("secure", "postgresql")
 
-  postgresql = Chef::EncryptedDataBagItem.load("secure", "postgresql")
+    directory "/home/inaturalist/.postgresql" do
+      owner "inaturalist"
+      group "inaturalist"
+      action :create
+    end
 
-  directory "/home/inaturalist/.postgresql" do
-    owner "inaturalist"
-    group "inaturalist"
-    action :create
+    file "/home/inaturalist/.postgresql/postgresql.crt" do
+      content postgresql["postgresql_crt"]
+      owner "inaturalist"
+      group "inaturalist"
+      mode "0600"
+    end
+
+    file "/home/inaturalist/.postgresql/postgresql.csr" do
+      content postgresql["postgresql_csr"]
+      owner "inaturalist"
+      group "inaturalist"
+      mode "0600"
+    end
+
+    file "/home/inaturalist/.postgresql/postgresql.key" do
+      content postgresql["postgresql_key"]
+      owner "inaturalist"
+      group "inaturalist"
+      mode "0600"
+    end
+
+    file "/home/inaturalist/.postgresql/root.crt" do
+      content postgresql["root_crt"]
+      owner "inaturalist"
+      group "inaturalist"
+      mode "0600"
+    end
   end
-
-  file "/home/inaturalist/.postgresql/postgresql.crt" do
-    content postgresql["postgresql_crt"]
-    owner "inaturalist"
-    group "inaturalist"
-    mode "0600"
-  end
-
-  file "/home/inaturalist/.postgresql/postgresql.csr" do
-    content postgresql["postgresql_csr"]
-    owner "inaturalist"
-    group "inaturalist"
-    mode "0600"
-  end
-
-  file "/home/inaturalist/.postgresql/postgresql.key" do
-    content postgresql["postgresql_key"]
-    owner "inaturalist"
-    group "inaturalist"
-    mode "0600"
-  end
-
-  file "/home/inaturalist/.postgresql/root.crt" do
-    content postgresql["root_crt"]
-    owner "inaturalist"
-    group "inaturalist"
-    mode "0600"
-  end
-
 rescue Net::HTTPServerException => e
-
   if e.response.code == "404"
     puts("INFO: The data bag item secure/postgresql does not exist")
   end
-
 end

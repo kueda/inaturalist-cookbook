@@ -20,8 +20,8 @@
 default["inaturalist"] = { }
 default["inaturalist"]["git_repo"] = "https://github.com/inaturalist/inaturalist.git"
 default["inaturalist"]["git_reference"] = "master"
-default["inaturalist"]["user"] = "inaturalist"
-default["inaturalist"]["group"] = "inaturalist"
+default["inaturalist"]["user"] = "vagrant"
+default["inaturalist"]["group"] = "vagrant"
 default["inaturalist"]["install_directory"] = "/home/inaturalist/inaturalist"
 
 default["inaturalist"]["db"] = { }
