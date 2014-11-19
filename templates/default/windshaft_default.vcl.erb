@@ -1,7 +1,18 @@
 vcl 4.0;
-backend default {
-  .host = "localhost";
+import directors;
+
+<%- node["windshaft_servers"].each do |server| -%>
+backend <%= server["name"] %> {
+  .host = "<%= server["ipaddress"] %>";
   .port = "4000";
+}
+<%- end -%>
+
+sub vcl_init {
+    new cluster1 = directors.round_robin();
+    <%- node["windshaft_servers"].each do |server| -%>
+    cluster1.add_backend(<%= server["name"] %>);
+    <%- end -%>
 }
 
 sub vcl_backend_error {
@@ -39,7 +50,7 @@ sub vcl_recv {
   # is slow to respond.
   #set req.grace = 120s;
   set req.http.X-Forwarded-For = client.ip;
-  set req.backend_hint = default;
+  set req.backend_hint = cluster1.backend();
 
   # This uses the ACL action called "purge". Basically if a request to
   # PURGE the cache comes from anywhere other than localhost, ignore it.

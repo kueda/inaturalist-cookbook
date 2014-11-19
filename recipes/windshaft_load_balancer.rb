@@ -17,6 +17,24 @@
 # limitations under the License.
 #
 
+all_windshaft_nodes = [ ]
+unless Chef::Config[:solo]
+  search(:node, "role:windshaft_server").each do |windshaft_node|
+    ipaddress = windshaft_node.has_key?("cloud") ?
+      windshaft_node["cloud"]["local_ipv4"] :
+      windshaft_node["ipaddress"]
+    all_windshaft_nodes << {
+      name: windshaft_node["hostname"], ipaddress: ipaddress
+    }
+  end
+end
+
+if all_windshaft_nodes.empty?
+  node.default["windshaft_servers"] = [ { name: 'localhost', ipaddress: 'localhost' } ]
+else
+  node.default["windshaft_servers"] = all_windshaft_nodes
+end
+
 include_recipe "varnish"
 include_recipe "redisio"
 include_recipe "redisio::enable"
