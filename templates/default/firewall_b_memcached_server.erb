@@ -1,0 +1,6 @@
+# memcached from all nodes
+<%- node["all_nodes"].each do |server| -%>
+# <%= server["name"] %>
+-A INPUT -p tcp -s <%= server["ipaddress"] %> -i eth1 --dport 11211 -j ACCEPT
+<%- end -%>
+

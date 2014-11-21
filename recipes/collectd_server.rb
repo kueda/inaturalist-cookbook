@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+iptables_rule "firewall_b_collectd_server"
+
 include_recipe "collectd::server"
 include_recipe "collectd::collectd_web"
 include_recipe "collectd_plugins"

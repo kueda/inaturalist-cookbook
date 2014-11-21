@@ -1,0 +1,39 @@
+# Block specific IP addresses, mostly spammers
+# These MUST be first.
+-A INPUT -p tcp -m iprange --src-range 222.186.23.0-222.186.23.255 -j DROP
+-A INPUT -p tcp -m iprange --src-range 222.186.24.0-222.186.24.255 -j DROP
+-A INPUT -p tcp -m iprange --src-range 222.186.26.0-222.186.26.255 -j DROP
+-A INPUT -p tcp -m iprange --src-range 61.160.232.0-61.160.232.255 -j DROP
+-A INPUT -p tcp -m iprange --src-range 61.169.73.0-61.169.73.255 -j DROP
+-A INPUT -p tcp -m iprange --src-range 122.226.223.0-122.226.223.255 -j DROP
+-A INPUT -p tcp -m iprange --src-range 117.41.185.0-117.41.185.255 -j DROP
+-A INPUT -p tcp -m iprange --src-range 60.169.73.0-60.169.73.255 -j DROP
+-A INPUT -p tcp -m iprange --src-range 222.186.25.0-222.186.25.255 -j DROP
+-A INPUT -p tcp -s 171.64.66.82 -j DROP
+-A INPUT -p tcp -m iprange --src-range 60.169.78.0-60.169.78.255 -j DROP
+-A INPUT -p tcp -m iprange --src-range 222.186.27.0-222.186.27.255 -j DROP
+-A INPUT -p tcp -m iprange --src-range 117.41.184.0-117.41.184.255 -j DROP
+-A INPUT -p tcp -m iprange --src-range 60.169.75.0-60.169.75.255 -j DROP
+
+# this one is actually an American hosting company...
+-A INPUT -p tcp -m iprange --src-range 216.155.145.0-216.155.145.255 -j DROP
+
+# 2014-03-31 scraping everything anonymously
+-A INPUT -p tcp -s 68.198.123.151 -j DROP
+
+#  Allows all loopback (lo0) traffic and drop all traffic to 127/8 that doesn't use lo0
+-A INPUT -i lo -j ACCEPT
+# -A INPUT -i ! lo -d 127.0.0.0/8 -j REJECT
+-A INPUT ! -i lo -d 127.0.0.0/8 -j REJECT
+
+#  Accepts all established inbound connections
+-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+#  Allows all outbound traffic
+#  You can modify this to only allow certain traffic
+-A OUTPUT -j ACCEPT
+
+# Allows HTTP and HTTPS connections from anywhere (the normal ports for websites)
+-A INPUT -p tcp --dport 80 -j ACCEPT
+-A INPUT -p tcp --dport 443 -j ACCEPT
+

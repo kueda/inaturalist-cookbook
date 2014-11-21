@@ -1,0 +1,12 @@
+# redis
+<%- node["windshaft_servers"].each do |server| -%>
+# <%= server["name"] %>
+-A INPUT -p tcp -s <%= server["ipaddress"] %> --dport 6379 -j ACCEPT
+<%- end -%>
+
+# windshaft app
+<%- node["windshaft_servers"].each do |server| -%>
+# <%= server["name"] %>
+-A INPUT -p tcp -s <%= server["ipaddress"] %> --dport 4000 -j ACCEPT
+<%- end -%>
+

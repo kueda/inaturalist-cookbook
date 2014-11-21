@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+iptables_rule "firewall_b_windshaft_server"
+
 include_recipe "inaturalist-cookbook::inaturalist_user"
 
 if node["windshaft"]["install_directory"]

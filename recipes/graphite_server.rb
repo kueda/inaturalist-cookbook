@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+iptables_rule "firewall_b_graphite_server"
+
 include_recipe "runit"
 include_recipe "graphite::carbon"
 include_recipe "graphite::_web_packages"

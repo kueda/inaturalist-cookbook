@@ -1,0 +1,17 @@
+# grafana is running on port 81 right now
+-A INPUT -p tcp --dport 81 -j ACCEPT
+
+# graphite web is running on port 8080 right now
+-A INPUT -p tcp --dport 8080 -j ACCEPT
+
+# statsd
+<%- node["all_nodes"].each do |server| -%>
+# <%= server["name"] %>
+-A INPUT -p udp -s <%= server["ipaddress"] %> --dport 2003 -j ACCEPT
+-A INPUT -p udp -s <%= server["ipaddress"] %> --dport 8125 -j ACCEPT
+<%- if server["public_ipaddress"] != server["ipaddress"] %>
+-A INPUT -p udp -s <%= server["public_ipaddress"] %> --dport 2003 -j ACCEPT
+-A INPUT -p udp -s <%= server["public_ipaddress"] %> --dport 8125 -j ACCEPT
+<%- end -%>
+<%- end -%>
+

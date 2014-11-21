@@ -19,21 +19,19 @@
 
 all_windshaft_nodes = [ ]
 unless Chef::Config[:solo]
-  search(:node, "role:windshaft_server").each do |windshaft_node|
-    ipaddress = windshaft_node.has_key?("cloud") ?
-      windshaft_node["cloud"]["local_ipv4"] :
-      windshaft_node["ipaddress"]
-    all_windshaft_nodes << {
-      name: windshaft_node["hostname"], ipaddress: ipaddress
-    }
+  search(:node, "role:windshaft_server").each do |n|
+    ipaddress = n.has_key?("cloud") ? n["cloud"]["local_ipv4"] : n["ipaddress"]
+    all_windshaft_nodes << { name: n["hostname"], ipaddress: ipaddress, public_ipaddress: n["ipaddress"] }
   end
 end
 
 if all_windshaft_nodes.empty?
-  node.default["windshaft_servers"] = [ { name: 'localhost', ipaddress: 'localhost' } ]
+  node.default["windshaft_servers"] = [ { name: "localhost", ipaddress: "localhost" } ]
 else
-  node.default["windshaft_servers"] = all_windshaft_nodes
+  node.default["windshaft_servers"] = all_windshaft_nodes.sort_by{ |n| n[:name] }
 end
+
+iptables_rule "firewall_b_windshaft_load_balancer"
 
 include_recipe "varnish"
 include_recipe "redisio"
