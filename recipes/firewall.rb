@@ -17,39 +17,13 @@
 # limitations under the License.
 #
 
-all_nodes = [ ]
-postgresql_nodes = [ ]
-memcached_nodes = [ ]
-nfs_nodes = [ ]
-sphinx_nodes = [ ]
-windshaft_load_balancers = [ ]
-
-unless Chef::Config[:solo]
-  search(:node, "chef_environment:#{node.chef_environment}").each do |n|
-    ipaddress =
-      if n.has_key?("cloud")
-        n["cloud"]["local_ipv4"]
-      elsif ips = n[:network][:interfaces][:eth1][:addresses].detect{ |k,v| v[:family] == "inet" }
-        ips.first
-      else
-        n["ipaddress"]
-      end
-    this_node = { name: n["hostname"], ipaddress: ipaddress, public_ipaddress: n["ipaddress"] }
-    all_nodes << this_node
-    postgresql_nodes << this_node if n["roles"].include?("postgresql_server")
-    memcached_nodes << this_node if n["roles"].include?("memcached_server")
-    nfs_nodes << this_node if n["roles"].include?("nfs_server")
-    sphinx_nodes << this_node if n["roles"].include?("sphinx_server")
-    windshaft_load_balancers << this_node if n["roles"].include?("windshaft_load_balancer")
-  end
-end
-
-node.default["all_nodes"] = all_nodes.sort_by{ |n| n[:name] }
-node.default["postgresql_nodes"] = postgresql_nodes.sort_by{ |n| n[:name] }
-node.default["memcached_nodes"] = memcached_nodes.sort_by{ |n| n[:name] }
-node.default["nfs_nodes"] = nfs_nodes.sort_by{ |n| n[:name] }
-node.default["sphinx_nodes"] = sphinx_nodes.sort_by{ |n| n[:name] }
-node.default["windshaft_load_balancers"] = windshaft_load_balancers.sort_by{ |n| n[:name] }
+all_nodes = custom_search_nodes("*")
+node.default["all_nodes"] = all_nodes
+node.default["postgresql_nodes"] = all_nodes.select{ |n| n[:roles].include?("postgresql_server") }
+node.default["memcached_nodes"] = all_nodes.select{ |n| n[:roles].include?("memcached_server") }
+node.default["nfs_nodes"] = all_nodes.select{ |n| n[:roles].include?("nfs_server") }
+node.default["sphinx_nodes"] = all_nodes.select{ |n| n[:roles].include?("sphinx_server") }
+node.default["windshaft_load_balancers"] = all_nodes.select{ |n| n[:roles].include?("windshaft_load_balancer") }
 
 include_recipe "iptables"
 include_recipe "fail2ban"

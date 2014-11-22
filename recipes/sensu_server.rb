@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+iptables_rule "firewall_b_sensu_server"
+
 include_recipe "inaturalist-cookbook::sensu"
 include_recipe "postfix::server"
 include_recipe "monitor::master"

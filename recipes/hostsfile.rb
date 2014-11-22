@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: inaturalist-cookbook
-# Recipe:: windshaft_load_balancer
+# Recipe:: hostsfile
 #
 # Copyright 2014, iNaturalist
 #
@@ -17,11 +17,10 @@
 # limitations under the License.
 #
 
-node.default["windshaft_servers"] = custom_search_nodes("role:windshaft_server")
-node.default["windshaft_servers"] ||= [ { name: "localhost", ipaddress: "localhost" } ]
-
-iptables_rule "firewall_b_windshaft_load_balancer"
-
-include_recipe "varnish"
-include_recipe "redisio"
-include_recipe "redisio::enable"
+node.default["all_nodes"] ||= [ ]
+node.default["all_nodes"].each do |n|
+  hostsfile_entry n[:ipaddress] do
+    hostname  n[:name]
+    action    :create_if_missing
+  end
+end

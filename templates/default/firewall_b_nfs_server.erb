@@ -1,4 +1,4 @@
-# nfs from all nodes
+# nfs
 <%- node["all_nodes"].each do |server| -%>
 # <%= server["name"] %>
 -A INPUT -p tcp -s  <%= server["ipaddress"] %> -i eth1 --dport 111 -j ACCEPT

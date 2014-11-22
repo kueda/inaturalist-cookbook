@@ -1,4 +1,4 @@
-# redis
+# windshaft redis
 <%- node["windshaft_servers"].each do |server| -%>
 # <%= server["name"] %>
 -A INPUT -p tcp -s <%= server["ipaddress"] %> --dport 6379 -j ACCEPT

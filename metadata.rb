@@ -33,6 +33,7 @@ version          "0.1.7"
     users
     grafana
     fail2ban
-    iptables).each do |cb|
+    iptables
+    hostsfile).each do |cb|
   depends cb
 end

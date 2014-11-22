@@ -1,0 +1,27 @@
+# sensu rabbitmq
+<%- node["all_nodes"].each do |server| -%>
+# <%= server["name"] %>
+-A INPUT -p tcp -s <%= server["ipaddress"] %> --dport 5671 -j ACCEPT
+<%- if server["public_ipaddress"] != server["ipaddress"] %>
+  -A INPUT -p tcp -s <%= server["public_ipaddress"] %> --dport 5671 -j ACCEPT
+<%- end -%>
+<%- end -%>
+
+# sensu redis
+<%- node["all_nodes"].each do |server| -%>
+# <%= server["name"] %>
+-A INPUT -p tcp -s <%= server["ipaddress"] %> --dport 6379 -j ACCEPT
+<%- if server["public_ipaddress"] != server["ipaddress"] %>
+  -A INPUT -p tcp -s <%= server["public_ipaddress"] %> --dport 6379 -j ACCEPT
+<%- end -%>
+<%- end -%>
+
+# sensu api
+<%- node["all_nodes"].each do |server| -%>
+# <%= server["name"] %>
+-A INPUT -p tcp -s <%= server["ipaddress"] %> --dport 4567 -j ACCEPT
+<%- if server["public_ipaddress"] != server["ipaddress"] %>
+  -A INPUT -p tcp -s <%= server["public_ipaddress"] %> --dport 4567 -j ACCEPT
+<%- end -%>
+<%- end -%>
+
