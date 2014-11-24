@@ -85,8 +85,8 @@ if node["windshaft"]["install_directory"]
     group "root"
   end
 
-  cookbook_file "#{ node["windshaft"]["install_directory"] }/node_modules.tar.gz" do
-    source "windshaft_node_modules.tar.gz"
+  remote_file "#{ node["windshaft"]["install_directory"] }/node_modules.tar.gz" do
+    source "https://dl.dropboxusercontent.com/u/1355101/windshaft_node_modules.tar.gz"
     owner node["windshaft"]["user"]
     group node["windshaft"]["group"]
     not_if { Dir.exists?("#{ node["windshaft"]["install_directory"] }/node_modules") }
