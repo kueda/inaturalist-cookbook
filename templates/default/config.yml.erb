@@ -1,0 +1,81 @@
+# Example services and site config. Keys in all caps are globally scoped
+base: &base
+    site_name: <%= node["inaturalist"]["site_name"] %>
+    site_name_short: <%= node["inaturalist"]["site_name_short"] %>
+    site_url: <%= node["inaturalist"]["site_url"] %>
+    <%- if node["inaturalist"]["assets_host"] %>
+    assets_host: '<%= node["inaturalist"]["assets_host"] %>'
+    <%- end %>
+    <%- if node["inaturalist"]["statsd_host"] %>
+    statsd_host: '<%= node["inaturalist"]["statsd_host"] %>'
+    <%- end %>
+    <%- if ! node["inaturalist"]["site_contact"].empty? %>
+    contact:
+      <%- node["inaturalist"]["site_contact"].each do |key, value| %>
+        <%= key %>: <%= value %>
+      <%- end %>
+    <%- end %>
+    logo: logo-small.gif
+    logo_large: <%= node["inaturalist"]["logo_large"] %>
+    about_url: <%= node["inaturalist"]["about_url"] %>
+    help_url: <%= node["inaturalist"]["help_url"] %>
+    rest_auth:
+        REST_AUTH_SITE_KEY: <%= node["inaturalist"]["rails"]["rest_auth"] %>
+        REST_AUTH_DIGEST_STRETCHES: 10
+    rails:
+        session_key: <%= node["inaturalist"]["rails"]["session_key"] %>
+        secret: <%= node["inaturalist"]["rails"]["secret"] %>
+    google_analytics:
+        tracker_id: <%= node["inaturalist"]["google"]["tracker_id"] %>
+        domain_name: inaturalist.org
+    ubio:
+        key: <%= node["inaturalist"]["ubio"]["key"] %>
+    yahoo_dev_network:
+        app_id: <%= node["inaturalist"]["yahoo"]["app_id"] %>
+    tile_servers:
+        observations: http://inaturalist.org/observations/tiles
+        tilestache: http://geo.inaturalist.org
+        tilestache_public_path: '/home/inaturalist/deployment/TileStache/public'
+        windshaft: '//d2c3f9u0bnvga6.cloudfront.net'
+    airbrake:
+        api_key: '<%= node["inaturalist"]["airbrake"]["api_key"] %>'
+    noreply_email: <%= node["inaturalist"]["noreply_email"] %>
+    admin_email: <%= node["inaturalist"]["admin_email"] %>
+    help_email: <%= node["inaturalist"]["help_email"] %>
+    info_email: <%= node["inaturalist"]["info_email"] %>
+    custom_footer: |
+        <center>
+            Supported by<br/><a href="http://calacademy.org"><img src="http://static.inaturalist.org/wiki_page_attachments/164-original.png" width="150" height="57"/></a>
+        </center>
+    google_webmaster:
+      verification: <%= node["inaturalist"]["google"]["webmaster_verification"] %>
+    s3_bucket: 'static.inaturalist.org'
+    memcached: '<%= node["inaturalist"]["memcached_host"] %>'
+    facebook:
+        namespace: inaturalist
+        app_id: <%= node["inaturalist"]["facebook"]["app_id"] %>
+        app_secret: <%= node["inaturalist"]["facebook"]["app_secret"] %>
+        admin_ids: <%= node["inaturalist"]["facebook"]["admin_ids"] %>
+        url: 'https://www.facebook.com/pages/iNaturalistorg/63336575498'
+    google:
+        client_id: <%= node["inaturalist"]["google"]["client_id"] %>
+        secret: <%= node["inaturalist"]["google"]["secret"] %>
+    twitter:
+        key: <%= node["inaturalist"]["twitter"]["key"] %>
+        secret: <%= node["inaturalist"]["twitter"]["secret"] %>
+        url: http://twitter.com/inaturalist
+        username: <%= node["inaturalist"]["twitter"]["username"] %>
+    bing:
+        key: <%= node["inaturalist"]["bing"]["key"] %>
+    ratatosk:
+        name_providers: [col, ubio]
+    soundcloud:
+        client_id: <%= node["inaturalist"]["soundcloud"]["client_id"] %>
+        secret: <%= node["inaturalist"]["soundcloud"]["secret"] %>
+    x_sendfile_header: 'X-Accel-Redirect'
+    flickr:
+        key: <%= node["inaturalist"]["flickr"]["key"] %>
+        shared_secret: <%= node["inaturalist"]["flickr"]["shared_secret"] %>
+
+production:
+    <<: *base

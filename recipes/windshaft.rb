@@ -28,7 +28,7 @@ if node["windshaft"]["install_directory"]
   include_recipe "nodejs::npm"
 
   %w(postgis postgresql-9.3-postgis-2.1 nodejs libgeos-dev libgeos++-dev zip
-     gdal-bin default-jre memcached vim nodejs).each do |pkg|
+     gdal-bin default-jre memcached vim).each do |pkg|
     package pkg
   end
 

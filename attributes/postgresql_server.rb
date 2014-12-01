@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: inaturalist-cookbook
-# Recipe:: memcached_server
+# Attributes:: postgresql_server
 #
 # Copyright 2014, iNaturalist
 #
@@ -17,6 +17,7 @@
 # limitations under the License.
 #
 
-iptables_rule "firewall_b_memcached_server"
-
-include_recipe "memcached"
+default["inaturalist"]["db"]["user"] = "inaturalist"
+default["inaturalist"]["db"]["password"] = "defaultpostgrespassword"
+default["inaturalist"]["db"]["host"] = node["ipaddress"]
+default["postgresql"]["config"]["listen_addresses"] = node["ipaddress"]

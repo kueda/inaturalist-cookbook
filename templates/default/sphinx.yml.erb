@@ -1,0 +1,7 @@
+production:
+  delayed_job_priority: 1
+  morphology: stem_en
+  port: <%= node["inaturalist"]["sphinx"]["port"] %>
+  address: <%= node["inaturalist"]["sphinx"]["host"] %>
+  bin_path: <%= node["inaturalist"]["sphinx"]["bin_path"] %>
+  use_64_bit: true

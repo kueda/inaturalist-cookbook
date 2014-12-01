@@ -1,0 +1,5 @@
+# redirect any traffic to subdomains or the machine's IP to the primary domain
+server {
+    listen 80;
+    rewrite ^ http://www.inaturalist.org$request_uri? permanent;
+}

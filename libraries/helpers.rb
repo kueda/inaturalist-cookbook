@@ -52,6 +52,41 @@ module Inaturalist
       matching_nodes.sort_by{ |n| n[:name] }
     end
 
+    #
+    # Load secure data bags
+    #
+    def load_secure_data_bags(data_bags)
+      unless Chef::Config[:solo]
+        data_bags.each do |bag|
+          begin
+            secure_data = Chef::EncryptedDataBagItem.load("secure", bag).to_hash
+            if secure_data["type"] == "environment_based"
+              if environment_data = secure_data[node.chef_environment]
+                environment_data.each do |key, value|
+                  node.default["inaturalist"][bag][key] = value
+                end
+              end
+            else
+              secure_data.each do |key, value|
+                node.default["inaturalist"][bag][key] = value
+              end
+            end
+          rescue Net::HTTPServerException => e
+            if e.response.code == "404"
+              puts("ERROR: unable to load encrypted data bag: #{ bag }")
+            end
+          end
+        end
+      end
+    end
+
+    # File activesupport/lib/active_support/core_ext/object/blank.rb, line 15
+    # An object is blank if it's false, empty, or a whitespace string.
+    # For example, '', '   ', +nil+, [], and {} are all blank.
+    def blank?(obj)
+      obj.respond_to?(:empty?) ? !!obj.empty? : !obj
+    end
+
   end
 end
 

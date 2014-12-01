@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: inaturalist-cookbook
-# Recipe:: memcached_server
+# Recipe:: legay_postgresql_server
 #
 # Copyright 2014, iNaturalist
 #
@@ -17,6 +17,4 @@
 # limitations under the License.
 #
 
-iptables_rule "firewall_b_memcached_server"
-
-include_recipe "memcached"
+iptables_rule "firewall_b_postgresql_server"

@@ -1,0 +1,8 @@
+---
+  user_name: <%= node["inaturalist"]["smtp"]["user_name"] %>
+  password: <%= node["inaturalist"]["smtp"]["password"] %>
+  domain: <%= node["inaturalist"]["smtp"]["domain"] %>
+  address: <%= node["inaturalist"]["smtp"]["address"] %>
+  port: <%= node["inaturalist"]["smtp"]["port"] %>
+  authentication: :plain
+  enable_starttls_auto: true

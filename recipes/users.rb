@@ -21,3 +21,8 @@ users_manage "sysadmin" do
   group_id 2300
   action [ :remove, :create ]
 end
+
+users_manage "rvm" do
+  group_id 2400
+  action [ :remove, :create ]
+end

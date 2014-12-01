@@ -1,0 +1,139 @@
+server {
+    listen 80;
+    root /home/inaturalist/deployment/production/current/public;
+    passenger_enabled on;
+    passenger_min_instances 2;
+    error_log /var/log/nginx/inaturalist-error.log;
+    access_log /var/log/nginx/inaturalist-access.log;
+
+    # main site
+    passenger_base_uri /;
+
+    # tilelite WSGI map observation points tile server
+    passenger_base_uri /observations/tiles;
+
+    # need to up the limits for photo uploads
+    client_max_body_size 10m;
+
+    error_page   500 502 503 504  /500.html;
+    location = /500.html {
+        root   html;
+    }
+
+    # Redirect all subdomain-less traffic to the www subdomain.  This
+    # ensures search bots don't get confused by different URLs and
+    # people remain logged in even if they click on a link to the
+    # subdomain-less URL.
+    set $perform_rewrite no;
+    if ($host = 'inaturalist.org') {
+      set $perform_rewrite yes;
+    }
+    if ($host = 'up.inaturalist.org') {
+      set $perform_rewrite yes;
+    }
+    if ($request_filename ~* [xml|json]$) {
+      set $perform_rewrite no;
+    }
+    if ($content_type ~* [xml|json]) {
+      set $perform_rewrite no;
+    }
+    if ($perform_rewrite = yes) {
+      rewrite  ^/(.*)$  http://www.inaturalist.org/$1  permanent;
+    }
+
+    if (-f $document_root/system/maintenance.html) {
+      rewrite ^(.*)$ /system/maintenance.html break;
+    }
+
+    location / {
+        passenger_enabled on;
+
+        # CORS config
+        # based on https://gist.github.com/alexjs/4165271, which has way more comments on what all these configs do
+        #
+        # enable CORS for for certain machine-readable formats endpoints
+        if ($request_filename ~* [xml|json|dwc|atom|kml]$) {
+            set $cors "true";
+        }
+
+        # OPTIONS indicates a CORS pre-flight request
+        if ($request_method = 'OPTIONS') {
+            set $cors "${cors}options";
+        }
+
+        # non-OPTIONS indicates a normal CORS request
+        if ($request_method = 'GET') {
+            set $cors "${cors}get";
+        }
+        if ($request_method = 'POST') {
+            set $cors "${cors}post";
+        }
+
+        # if it's a GET or POST, set the standard CORS responses header
+        if ($cors = "trueget") {
+            # Tells the browser this origin may make cross-origin requests
+            # (Here, we echo the requesting origin, which matched the whitelist.)
+            add_header 'Access-Control-Allow-Origin' "$http_origin";
+            # Tells the browser it may show the response, when XmlHttpRequest.withCredentials=true.
+            add_header 'Access-Control-Allow-Credentials' 'true';
+            # # Tell the browser which response headers the JS can see, besides the "simple response headers"
+            add_header 'Access-Control-Expose-Headers' 'X-Per-Page';
+            add_header 'Access-Control-Expose-Headers' 'X-Total-Entries';
+        }
+
+        # Don't allow POST for now
+        # if ($cors = "truepost") {
+        #     add_header 'Access-Control-Allow-Origin' "$http_origin";
+        #     add_header 'Access-Control-Allow-Credentials' 'true';
+        # }
+
+        # if it's OPTIONS, for a CORS preflight request, then respond immediately with no response body
+        if ($cors = "trueoptions") {
+            add_header 'Access-Control-Allow-Origin' "$http_origin";
+            add_header 'Access-Control-Allow-Credentials' 'true';
+
+            #
+            # Return special preflight info
+            #
+
+            # Tell browser to cache this pre-flight info for 20 days
+            add_header 'Access-Control-Max-Age' 1728000;
+
+            # Tell browser we respond to GET,POST,OPTIONS in normal CORS requests.
+            #
+            # We should only need this header for non-simple requests
+            # methods (e.g., DELETE), or custom request methods (e.g., XMODIFY)
+            # add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+            add_header 'Access-Control-Allow-Methods' 'GET, OPTIONS';
+
+            add_header 'Access-Control-Allow-Headers' 'Authorization,Content-Type,Accept,Origin,User-Agent,DNT,Cache-Control,X-Mx-ReqToken,Keep-Alive,X-Requested-With,If-Modified-Since';
+
+            # build entire response to the preflight request
+            # no body in this response
+            add_header 'Content-Length' 0;
+            # (should not be necessary, but included for non-conforming browsers)
+            add_header 'Content-Type' 'text/plain charset=UTF-8';
+            # indicate successful return with no content
+            return 204;
+        }
+    }
+    location ~ ^/assets/ {
+        gzip_static on; # to serve pre-gzipped version
+        expires max;
+        add_header Cache-Control public;
+        add_header ETag "";
+        break;
+    }
+    # redirect old asset requests to asset pipeline equivalents
+    set $perform_rewrite no;
+    # rewrite_log on; # debug
+    if ($request_uri ~ /(images|stylesheets)/) {
+        set $perform_rewrite ye;
+    }
+    if ($request_uri !~ /assets/(images|stylesheets)/) {
+        set $perform_rewrite "${perform_rewrite}s";
+    }
+    if ($perform_rewrite = yes) {
+        rewrite ^/(images|stylesheets)/(.*)$ /assets/$2 permanent;
+    }
+}

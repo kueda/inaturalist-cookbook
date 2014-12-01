@@ -1,6 +1,6 @@
 # psql
 <%- node["all_nodes"].each do |server| -%>
 # <%= server["name"] %>
--A INPUT -p tcp -s <%= server["ipaddress"] %> -i eth1 --dport 5432 -j ACCEPT
+-A INPUT -p tcp -s <%= server["ipaddress"] %> --dport 5432 -j ACCEPT
 <%- end -%>
 

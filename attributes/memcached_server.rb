@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: inaturalist-cookbook
-# Recipe:: memcached_server
+# Cookbook Name => => inaturalist-cookbook
+# Attributes => => memcached_server
 #
 # Copyright 2014, iNaturalist
 #
@@ -8,7 +8,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#     http =>//www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,6 +17,4 @@
 # limitations under the License.
 #
 
-iptables_rule "firewall_b_memcached_server"
-
-include_recipe "memcached"
+default["memcached"]["listen"] = node["ipaddress"]

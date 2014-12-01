@@ -1,25 +1,25 @@
 # psql
 <%- node["postgresql_nodes"].each do |server| -%>
 # <%= server["name"] %>
--A INPUT -p tcp -s <%= server["ipaddress"] %> -i eth1 --dport 5432 -j ACCEPT
+-A INPUT -p tcp -s <%= server["ipaddress"] %> --dport 5432 -j ACCEPT
 <%- end -%>
 
 # memcached
 <%- node["memcached_nodes"].each do |server| -%>
 # <%= server["name"] %>
--A INPUT -p tcp -s <%= server["ipaddress"] %> -i eth1 --dport 11211 -j ACCEPT
+-A INPUT -p tcp -s <%= server["ipaddress"] %> --dport 11211 -j ACCEPT
 <%- end -%>
 
 # nfs
 <%- node["nfs_nodes"].each do |server| -%>
 # <%= server["name"] %>
--A INPUT -p tcp -s  <%= server["ipaddress"] %> -i eth1 --dport 111 -j ACCEPT
--A INPUT -p tcp -s  <%= server["ipaddress"] %> -i eth1 --dport 2049 -j ACCEPT
+-A INPUT -p tcp -s  <%= server["ipaddress"] %> --dport 111 -j ACCEPT
+-A INPUT -p tcp -s  <%= server["ipaddress"] %> --dport 2049 -j ACCEPT
 <%- end -%>
 
 # searchd
 <%- node["sphinx_nodes"].each do |server| -%>
 # <%= server["name"] %>
--A INPUT -p tcp -s <%= server["ipaddress"] %> -i eth1 --dport 3312 -j ACCEPT
+-A INPUT -p tcp -s <%= server["ipaddress"] %> --dport 3312 -j ACCEPT
 <%- end -%>
 

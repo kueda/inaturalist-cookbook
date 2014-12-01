@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: inaturalist-cookbook
-# Recipe:: memcached_server
+# Recipe:: legacy_memcached_server
 #
 # Copyright 2014, iNaturalist
 #
@@ -18,5 +18,3 @@
 #
 
 iptables_rule "firewall_b_memcached_server"
-
-include_recipe "memcached"

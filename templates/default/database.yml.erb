@@ -1,0 +1,8 @@
+production:
+  adapter: postgresql
+  host: <%= node["inaturalist"]["db"]["host"] %>
+  username: <%= node["inaturalist"]["db"]["user"] %>
+  password: <%= node["inaturalist"]["db"]["password"] %>
+  encoding: utf8
+  database: inaturalist_production
+  template: template_postgis
