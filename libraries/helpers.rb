@@ -29,28 +29,31 @@ module Inaturalist
       matching_nodes = [ ]
       unless Chef::Config[:solo]
         search(:node, query).each do |n|
-          ipaddress =
-            # get the private IP if available
-            if n.has_key?("cloud")
-              n["cloud"]["local_ipv4"]
-            # TODO: this was needed for older Rackspace VMs. This isn't going to work everywhere
-            elsif n[:network][:interfaces][:eth1] &&
-              ips = n[:network][:interfaces][:eth1][:addresses].detect{ |k,v| v[:family] == "inet" }
-              ips.first
-            else
-              # otherwise return the public / default IP
-              n["ipaddress"]
-            end
-          matching_nodes << {
-            name: n["hostname"],
-            ipaddress: ipaddress,
-            public_ipaddress: n["ipaddress"],
-            roles: n["roles"],
-            recipes: n["recipes"]
-          }
+          matching_nodes << node_data(n)
         end
       end
       matching_nodes.sort_by{ |n| n[:name] }
+    end
+
+    def node_data(n)
+      ipaddress =
+        # get the private IP if available
+        if n.has_key?("cloud")
+          n["cloud"]["local_ipv4"]
+        # TODO: this was needed for older Rackspace VMs. This isn't going to work everywhere
+        elsif n[:network][:interfaces][:eth1] &&
+          ips = n[:network][:interfaces][:eth1][:addresses].detect{ |k,v| v[:family] == "inet" }
+          ips.first
+        else
+          # otherwise return the public / default IP
+          n["ipaddress"]
+        end
+      {
+        name: n["hostname"],
+        ipaddress: ipaddress,
+        public_ipaddress: n["ipaddress"],
+        roles: n["roles"]
+      }
     end
 
     #

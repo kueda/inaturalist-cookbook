@@ -28,6 +28,9 @@ node["all_nodes"].each do |server|
   }
 end
 
+node.default["inaturalist"]["db"]["host"] = node_data(node)[:ipaddress]
+node.default["postgresql"]["config"]["listen_addresses"] = node_data(node)[:ipaddress]
+
 node.default["postgresql"]["config_pgtune"]["db_type"] = "web"
 node.default["postgresql"]["config_pgtune"]["max_connections"] = 100
 
@@ -50,8 +53,7 @@ script "initialize_postgis" do
   sudo -u postgres psql template_postgis < /usr/share/postgresql/9.3/contrib/postgis-2.1/postgis.sql
   sudo -u postgres psql template_postgis < /usr/share/postgresql/9.3/contrib/postgis-2.1/spatial_ref_sys.sql
   sudo -u postgres createdb -T template_postgis inaturalist_production
-  sudo -u postgres psql -c "CREATE USER #{ node["inaturalist"]["db"]["user"] } WITH PASSWORD '#{ node["inaturalist"]["db"]["password"] }';"
-  sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE inaturalist_production TO #{ node["inaturalist"]["db"]["user"] };"
+  sudo -u postgres psql -c "CREATE USER #{ node["inaturalist"]["db"]["user"] } WITH SUPERUSER PASSWORD '#{ node["inaturalist"]["db"]["password"] }';"
   EOH
   not_if "sudo -u postgres psql -l | grep template_postgis"
 end

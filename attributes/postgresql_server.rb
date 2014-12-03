@@ -19,5 +19,3 @@
 
 default["inaturalist"]["db"]["user"] = "inaturalist"
 default["inaturalist"]["db"]["password"] = "defaultpostgrespassword"
-default["inaturalist"]["db"]["host"] = node["ipaddress"]
-default["postgresql"]["config"]["listen_addresses"] = node["ipaddress"]
