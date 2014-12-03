@@ -1,8 +1,8 @@
 ---
-  user_name: <%= node["inaturalist"]["smtp"]["user_name"] %>
-  password: <%= node["inaturalist"]["smtp"]["password"] %>
-  domain: <%= node["inaturalist"]["smtp"]["domain"] %>
-  address: <%= node["inaturalist"]["smtp"]["address"] %>
-  port: <%= node["inaturalist"]["smtp"]["port"] %>
+  user_name: <%= secure_or_default("smtp", "user_name") %>
+  password: <%= secure_or_default("smtp", "password") %>
+  domain: <%= secure_or_default("smtp", "domain") %>
+  address: <%= secure_or_default("smtp", "address") %>
+  port: <%= secure_or_default("smtp", "port") %>
   authentication: :plain
   enable_starttls_auto: true

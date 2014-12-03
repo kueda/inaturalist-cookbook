@@ -30,11 +30,6 @@ execute "sudo -u #{ node["inaturalist"]["user"] } cp #{ node["inaturalist"]["ins
   notifies :run, "script[edit_database_yml]", :delayed
 end
 
-execute "sudo -u #{ node["inaturalist"]["user"] } cp #{ node["inaturalist"]["install_directory"] }/config/gmaps_api_key.yml.example #{ node["inaturalist"]["install_directory"] }/config/gmaps_api_key.yml" do
-  only_if { File.exists?("#{ node["inaturalist"]["install_directory"] }/config/gmaps_api_key.yml.example") }
-  not_if { File.exists?("#{ node["inaturalist"]["install_directory"] }/config/gmaps_api_key.yml") }
-end
-
 execute "sudo -u #{ node["inaturalist"]["user"] } cp #{ node["inaturalist"]["install_directory"] }/config/smtp.yml.example #{ node["inaturalist"]["install_directory"] }/config/smtp.yml" do
   only_if { File.exists?("#{ node["inaturalist"]["install_directory"] }/config/smtp.yml.example") }
   not_if { File.exists?("#{ node["inaturalist"]["install_directory"] }/config/smtp.yml") }

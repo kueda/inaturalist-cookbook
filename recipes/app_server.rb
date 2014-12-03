@@ -98,11 +98,6 @@ include_recipe "sphinx"
 node.default["inaturalist"]["sphinx"]["bin_path"] =
   File.exists?("/usr/local/bin/searchd") ? "/usr/local/bin/" : "/usr/bin/"
 
-# Load encrypted data bags
-load_secure_data_bags([
-  :airbrake, :amazon, :bing, :facebook, :flickr, :google,
-  :rails, :site_contact, :smtp, :soundcloud, :twitter, :ubio, :yahoo])
-
 # Create directory structure for Rails/capistrano app
 [ "/home/inaturalist/deployment",
   "/home/inaturalist/deployment/production",
@@ -111,12 +106,12 @@ load_secure_data_bags([
   "/home/inaturalist/deployment/production/shared/log",
   "/home/inaturalist/deployment/production/shared/pids",
   "/home/inaturalist/deployment/production/shared/system",
-  "/home/inaturalist/deployment/production/system",
-  "/home/inaturalist/deployment/production/system/attachments",
-  "/home/inaturalist/deployment/production/system/cache",
-  "/home/inaturalist/deployment/production/system/db",
-  "/home/inaturalist/deployment/production/system/page_cache",
-  "/home/inaturalist/deployment/production/system/page_cache/observations"
+  "/home/inaturalist/deployment/production/shared/system/attachments",
+  "/home/inaturalist/deployment/production/shared/system/cache",
+  "/home/inaturalist/deployment/production/shared/system/db",
+  "/home/inaturalist/deployment/production/shared/system/db/sphinx",
+  "/home/inaturalist/deployment/production/shared/system/page_cache",
+  "/home/inaturalist/deployment/production/shared/system/page_cache/observations"
 ].each do |dir|
   directory dir do
     owner "inaturalist"
@@ -128,7 +123,6 @@ end
 # Create Rails config files
 [ "config.yml",
   "database.yml",
-  "production_gmaps_api_key.yml",
   "s3.yml",
   "settings.yml",
   "smtp.yml",
@@ -139,6 +133,7 @@ end
     owner "inaturalist"
     group "inaturalist"
     mode "0600"
+    helpers(Inaturalist::Helpers)
   end
 end
 

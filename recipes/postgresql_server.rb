@@ -17,6 +17,7 @@
 # limitations under the License.
 #
 
+node.default["postgresql"]["pg_hba"] = [ ]
 node["all_nodes"].each do |server|
   node.default["postgresql"]["pg_hba"] << {
     "type" => "host",
@@ -27,9 +28,14 @@ node["all_nodes"].each do |server|
   }
 end
 
+node.default["postgresql"]["config_pgtune"]["db_type"] = "web"
+node.default["postgresql"]["config_pgtune"]["max_connections"] = 100
+
 iptables_rule "firewall_b_postgresql_server"
 
+include_recipe "inaturalist-cookbook::inaturalist_user"
 include_recipe "postgresql::server"
+include_recipe "postgresql::config_pgtune"
 
 %w(postgis postgresql-9.3-postgis-2.1).each do |pkg|
   package pkg

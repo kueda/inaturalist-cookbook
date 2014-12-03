@@ -19,11 +19,21 @@
 
 all_nodes = custom_search_nodes("*")
 node.default["all_nodes"] = all_nodes
-node.default["postgresql_nodes"] = all_nodes.select{ |n| n[:roles].include?("postgresql_server") }
-node.default["memcached_nodes"] = all_nodes.select{ |n| n[:roles].include?("memcached_server") }
-node.default["nfs_nodes"] = all_nodes.select{ |n| n[:roles].include?("nfs_server") }
-node.default["sphinx_nodes"] = all_nodes.select{ |n| n[:roles].include?("sphinx_server") }
-node.default["windshaft_load_balancers"] = all_nodes.select{ |n| n[:roles].include?("windshaft_load_balancer") }
+node.default["postgresql_nodes"] = all_nodes.select{ |n|
+  n[:roles].include?("postgresql_server") ||
+  n[:recipes].include?("inaturalist-cookbook::postgresql_server") }
+node.default["memcached_nodes"] = all_nodes.select{ |n|
+  n[:roles].include?("memcached_server") ||
+  n[:recipes].include?("inaturalist-cookbook::memcached_server") }
+node.default["nfs_nodes"] = all_nodes.select{ |n|
+  n[:roles].include?("nfs_server") ||
+  n[:recipes].include?("inaturalist-cookbook::nfs_server") }
+node.default["sphinx_nodes"] = all_nodes.select{ |n|
+  n[:roles].include?("sphinx_server") ||
+  n[:recipes].include?("inaturalist-cookbook::sphinx_server") }
+node.default["windshaft_load_balancers"] = all_nodes.select{ |n|
+  n[:roles].include?("windshaft_load_balancer") ||
+  n[:recipes].include?("inaturalist-cookbook::windshaft_load_balancer") }
 
 include_recipe "iptables"
 include_recipe "fail2ban"

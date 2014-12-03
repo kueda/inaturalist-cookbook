@@ -30,46 +30,66 @@ user "inaturalist" do
   action :create
 end
 
-begin
-  unless Chef::Config[:solo]
-    postgresql = Chef::EncryptedDataBagItem.load("secure", "postgresql")
+load_secure_data_bags([ :ssh, :postgresql ])
 
-    directory "/home/inaturalist/.postgresql" do
-      owner "inaturalist"
-      group "inaturalist"
-      action :create
-    end
-
-    file "/home/inaturalist/.postgresql/postgresql.crt" do
-      content postgresql["postgresql_crt"]
-      owner "inaturalist"
-      group "inaturalist"
-      mode "0600"
-    end
-
-    file "/home/inaturalist/.postgresql/postgresql.csr" do
-      content postgresql["postgresql_csr"]
-      owner "inaturalist"
-      group "inaturalist"
-      mode "0600"
-    end
-
-    file "/home/inaturalist/.postgresql/postgresql.key" do
-      content postgresql["postgresql_key"]
-      owner "inaturalist"
-      group "inaturalist"
-      mode "0600"
-    end
-
-    file "/home/inaturalist/.postgresql/root.crt" do
-      content postgresql["root_crt"]
-      owner "inaturalist"
-      group "inaturalist"
-      mode "0600"
-    end
+# Add SSH keys
+if secure = node.run_state["inaturalist"]["secure"]["ssh"]
+  directory "/home/inaturalist/.ssh" do
+    owner "inaturalist"
+    group "inaturalist"
+    action :create
+    mode "0700"
   end
-rescue Net::HTTPServerException => e
-  if e.response.code == "404"
-    puts("INFO: The data bag item secure/postgresql does not exist")
+
+  file "/home/inaturalist/.ssh/id_rsa" do
+    content secure["id_rsa"]
+    owner "inaturalist"
+    group "inaturalist"
+    mode "0600"
+  end
+
+  file "/home/inaturalist/.ssh/id_rsa.pub" do
+    content secure["id_rsa.pub"]
+    owner "inaturalist"
+    group "inaturalist"
+    mode "0600"
+  end
+end
+
+# Add PostgreSQL SSH keys
+if secure = node.run_state["inaturalist"]["secure"]["postgresql"]
+  directory "/home/inaturalist/.postgresql" do
+    owner "inaturalist"
+    group "inaturalist"
+    action :create
+    mode "0700"
+  end
+
+  file "/home/inaturalist/.postgresql/postgresql.crt" do
+    content secure["postgresql.crt"]
+    owner "inaturalist"
+    group "inaturalist"
+    mode "0600"
+  end
+
+  file "/home/inaturalist/.postgresql/postgresql.csr" do
+    content secure["postgresql.csr"]
+    owner "inaturalist"
+    group "inaturalist"
+    mode "0600"
+  end
+
+  file "/home/inaturalist/.postgresql/postgresql.key" do
+    content secure["postgresql.key"]
+    owner "inaturalist"
+    group "inaturalist"
+    mode "0600"
+  end
+
+  file "/home/inaturalist/.postgresql/root.crt" do
+    content secure["root.crt"]
+    owner "inaturalist"
+    group "inaturalist"
+    mode "0600"
   end
 end

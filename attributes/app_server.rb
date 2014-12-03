@@ -73,7 +73,8 @@ default["inaturalist"] = {
     "secret" => hex * 24,
     "webmaster_verification" => hex * 64,
     "tracker_id" => "UA-000000-0",
-    "maps_api_key" => hex * 64
+    "maps_api_key" => hex * 64,
+    "simple_key" => hex * 64
   },
   "rails" => {
     "secret" => char * 128,

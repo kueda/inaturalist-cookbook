@@ -45,7 +45,8 @@ module Inaturalist
             name: n["hostname"],
             ipaddress: ipaddress,
             public_ipaddress: n["ipaddress"],
-            roles: n["roles"]
+            roles: n["roles"],
+            recipes: n["recipes"]
           }
         end
       end
@@ -56,28 +57,49 @@ module Inaturalist
     # Load secure data bags
     #
     def load_secure_data_bags(data_bags)
-      unless Chef::Config[:solo]
-        data_bags.each do |bag|
-          begin
-            secure_data = Chef::EncryptedDataBagItem.load("secure", bag).to_hash
-            if secure_data["type"] == "environment_based"
-              if environment_data = secure_data[node.chef_environment]
-                environment_data.each do |key, value|
-                  node.default["inaturalist"][bag][key] = value
-                end
-              end
-            else
-              secure_data.each do |key, value|
-                node.default["inaturalist"][bag][key] = value
-              end
+      node.run_state["inaturalist"] ||= { }
+      node.run_state["inaturalist"]["secure"] ||= { }
+      data_bags.each do |data_bag|
+        data_bag = data_bag.to_s
+        next if node.run_state["inaturalist"]["secure"][data_bag]
+        node.run_state["inaturalist"]["secure"][data_bag] = { }
+        if secure_data = load_secure_data_bag(data_bag)
+          if secure_data["type"] == "environment_based"
+            if environment_data = secure_data[node.chef_environment]
+              load_hash_into_run_state(data_bag, environment_data)
             end
-          rescue Net::HTTPServerException => e
-            if e.response.code == "404"
-              puts("ERROR: unable to load encrypted data bag: #{ bag }")
-            end
+          else
+            load_hash_into_run_state(data_bag, secure_data)
           end
         end
       end
+    end
+
+    def load_hash_into_run_state(data_bag, hash)
+      hash.each do |key, value|
+        node.run_state["inaturalist"]["secure"][data_bag][key] = value
+      end
+    end
+
+    def load_secure_data_bag(data_bag)
+      data_bag = data_bag.to_s
+      unless Chef::Config[:solo]
+        begin
+          return Chef::EncryptedDataBagItem.load("secure", data_bag).to_hash
+        rescue Net::HTTPServerException => e
+          if e.response.code == "404"
+            puts("ERROR: unable to load encrypted data bag: #{ data_bag }")
+          end
+        end
+      end
+    end
+
+    def secure_or_default(data_bag, key)
+      data_bag = data_bag.to_s
+      key = key.to_s
+      load_secure_data_bags([ data_bag ])
+      node.run_state["inaturalist"]["secure"][data_bag][key] ||
+        node.default["inaturalist"][data_bag][key]
     end
 
     # File activesupport/lib/active_support/core_ext/object/blank.rb, line 15
