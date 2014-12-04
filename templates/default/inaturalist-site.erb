@@ -6,6 +6,12 @@ server {
     error_log /var/log/nginx/inaturalist-error.log;
     access_log /var/log/nginx/inaturalist-access.log;
 
+    <%- if node["inaturalist"]["site_htpasswd"] %>
+    # Basic authentication
+    auth_basic "Restricted";
+    auth_basic_user_file <%= node["nginx"]["dir"] %>/.htpasswd;
+    <%- end %>
+
     # main site
     passenger_base_uri /;
 

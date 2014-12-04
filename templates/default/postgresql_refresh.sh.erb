@@ -1,10 +1,17 @@
 #!/bin/sh
 
-scp <%= node["inaturalist"]["db"]["host"] %>:/data/backup/inaturalist_production.daily.csql /home/inaturalist/.
-if [ -f /home/inaturalist/inaturalist_production.daily.csql ]
+rm /home/inaturalist/inaturalist_production_data.daily.csql
+rm /home/inaturalist/inaturalist_production_data.daily.csql.lst
+rm /home/inaturalist/inaturalist_production_schema.daily.csql
+rm /home/inaturalist/inaturalist_production_schema.daily.csql.lst
+scp <%= node["inaturalist"]["db"]["restore_host"] %>:/data/backup/inaturalist_production_data.daily.csql /home/inaturalist/.
+scp <%= node["inaturalist"]["db"]["restore_host"] %>:/data/backup/inaturalist_production_schema.daily.csql /home/inaturalist/.
+if [ -f /home/inaturalist/inaturalist_production_data.daily.csql ]
   then
     psql -d inaturalist_production -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE datname='inaturalist_production' AND state='idle';"
     dropdb inaturalist_production
     createdb -T template_postgis inaturalist_production
-    perl /usr/share/postgresql/9.3/contrib/postgis-2.1/postgis_restore.pl inaturalist_production.daily.csql | psql inaturalist_production
+    perl /usr/share/postgresql/9.3/contrib/postgis-2.1/postgis_restore.pl /home/inaturalist/inaturalist_production_schema.daily.csql | psql inaturalist_production
+    perl /usr/share/postgresql/9.3/contrib/postgis-2.1/postgis_restore.pl /home/inaturalist/inaturalist_production_data.daily.csql | psql inaturalist_production
+    touch /home/inaturalist/deployment/production/current/tmp/restart.txt
 fi

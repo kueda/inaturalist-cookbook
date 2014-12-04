@@ -20,7 +20,9 @@
 include_recipe "inaturalist-cookbook::memcached_server"
 include_recipe "inaturalist-cookbook::postgresql_server"
 include_recipe "inaturalist-cookbook::app_server"
+include_recipe "postfix::server"
 
+# bash script to download and import the latest production dump
 template "/home/inaturalist/postgresql_refresh.sh" do
   source "postgresql_refresh.sh.erb"
   owner "inaturalist"

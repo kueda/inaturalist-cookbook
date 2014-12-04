@@ -55,9 +55,9 @@ include_recipe "postgresql::client"
 # https://get.rvm.io is down for some reason. Try running chef-client again
 include_recipe "rvm::system"
 
-rvm_gem 'passenger' do
+rvm_gem "passenger" do
   action :install
-  version node['nginx']['passenger']['version']
+  version node["nginx"]["passenger"]["version"]
 end
 
 # NGINX
@@ -79,6 +79,16 @@ template "#{ node['nginx']['dir'] }/sites-available/bypass" do
   group node["root_group"]
   mode "0644"
   notifies :reload, "service[nginx]"
+end
+
+if node["inaturalist"]["site_htpasswd"]
+  file "#{ node['nginx']['dir'] }/.htpasswd" do
+    content node["inaturalist"]["site_htpasswd"]
+    owner "root"
+    group node["root_group"]
+    mode "0644"
+    notifies :reload, "service[nginx]"
+  end
 end
 
 # set the GC environment variables for passenger through RVM
