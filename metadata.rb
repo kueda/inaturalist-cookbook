@@ -12,13 +12,11 @@ version          "0.1.9"
     sudo
     vim
     rvm
-    git
     curl
     build-essential
     varnish
     nodejs
     redisio
-    apt
     omnibus_updater
     timezone
     chef-client

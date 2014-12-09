@@ -19,5 +19,5 @@
 
 iptables_rule "firewall_b_memcached_server"
 
-node.default["memcached"]["listen"] = node_data(node)[:ipaddress]
+node.default["memcached"]["listen"] = node_data(node)["ipaddress"]
 include_recipe "memcached"

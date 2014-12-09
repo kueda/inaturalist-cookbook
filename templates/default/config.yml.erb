@@ -9,6 +9,9 @@ base: &base
     <%- if node["inaturalist"]["statsd_host"] %>
     statsd_host: '<%= node["inaturalist"]["statsd_host"] %>'
     <%- end %>
+    <%- if node["inaturalist"]["attachments_host"] %>
+    attachments_host: <%= node["inaturalist"]["attachments_host"] %>
+    <%- end %>
     <%- if ! node["inaturalist"]["site_contact"].empty? %>
     contact:
       <%- node["inaturalist"]["site_contact"].each do |key, value| %>
@@ -36,7 +39,7 @@ base: &base
         observations: http://inaturalist.org/observations/tiles
         tilestache: http://geo.inaturalist.org
         tilestache_public_path: '/home/inaturalist/deployment/TileStache/public'
-        windshaft: '//d2c3f9u0bnvga6.cloudfront.net'
+        windshaft: <%= node["inaturalist"]["windshaft_url"] %>
     airbrake:
         api_key: '<%= secure_or_default("airbrake", "api_key") %>'
     noreply_email: <%= node["inaturalist"]["noreply_email"] %>

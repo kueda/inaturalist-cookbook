@@ -2,7 +2,7 @@
 -A INPUT -p tcp --dport 81 -j ACCEPT
 
 # udp port for collectd data collection
-<%- node["all_nodes"].each do |server| -%>
+<%- node.run_state["all_nodes"].each do |server| -%>
 # <%= server["name"] %>
 -A INPUT -p udp -s <%= server["ipaddress"] %> --dport 25826 -j ACCEPT
 <%- end -%>

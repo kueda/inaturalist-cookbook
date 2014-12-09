@@ -32,7 +32,7 @@ module Inaturalist
           matching_nodes << node_data(n)
         end
       end
-      matching_nodes.sort_by{ |n| n[:name] }
+      matching_nodes.sort_by{ |n| n["name"] }
     end
 
     def node_data(n)
@@ -49,10 +49,10 @@ module Inaturalist
           n["ipaddress"]
         end
       {
-        name: n["hostname"],
-        ipaddress: ipaddress,
-        public_ipaddress: n["ipaddress"],
-        roles: n["roles"]
+        "name" => n["hostname"],
+        "ipaddress" => ipaddress,
+        "public_ipaddress" => n["ipaddress"],
+        "roles" => n["roles"]
       }
     end
 

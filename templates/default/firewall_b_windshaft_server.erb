@@ -1,5 +1,5 @@
 # windshaft load balancer
-<%- node["windshaft_load_balancers"].each do |server| -%>
+<%- node.run_state["windshaft_load_balancers"].each do |server| -%>
 # <%= server["name"] %>
 -A INPUT -p tcp -s <%= server["ipaddress"] %> --dport 4000 -j ACCEPT
 <%- end -%>

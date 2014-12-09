@@ -5,7 +5,7 @@
 -A INPUT -p tcp --dport 8080 -j ACCEPT
 
 # statsd
-<%- node["all_nodes"].each do |server| -%>
+<%- node.run_state["all_nodes"].each do |server| -%>
 # <%= server["name"] %>
 -A INPUT -p udp -s <%= server["ipaddress"] %> --dport 2003 -j ACCEPT
 -A INPUT -p udp -s <%= server["ipaddress"] %> --dport 8125 -j ACCEPT

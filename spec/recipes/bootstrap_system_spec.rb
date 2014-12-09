@@ -1,6 +1,6 @@
 require 'chefspec'
 
-describe 'inaturalist-cookbook::default' do
+describe 'inaturalist-cookbook::bootstrap_system' do
 
   let(:chef_run) { ChefSpec::Runner.new.converge(described_recipe) }
 

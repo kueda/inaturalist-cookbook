@@ -1,40 +1,29 @@
 ---
 driver:
   name: vagrant
+  require_chef_omnibus: 11.16.4
 
 provisioner:
   name: chef_solo
+  cookbook_path: cookbooks
 
 platforms:
   - name: ubuntu-14.04
 
+busser:
+  sudo: true
+
 suites:
-  - name: default
+  - name: bootstrap_system
     run_list:
-      - [ "recipe[inaturalist-cookbook::default]" ]
-    attributes:
-  - name: development
-    run_list:
-      - [ "recipe[inaturalist-cookbook::default]", "recipe[inaturalist-cookbook::development]", "recipe[inaturalist-cookbook::_development_config]" ]
+      - [ "recipe[inaturalist-cookbook::bootstrap_system]" ]
     attributes: {
-      postgresql: {
-        password: {
-          postgres: "vagrantpostgrespw"
-        }
-      },
-      rvm: {
-        user_installs: [ {
-          user: "vagrant",
-          rubies: [ "ruby-1.9.3" ],
-          default_ruby: "ruby-1.9.3",
-          vagrant: {
-            system_chef_solo: "/usr/bin/chef-solo"
-          }
-        } ]
+      omnibus_updater: {
+        version: "11.16.4"
       },
       authorization: {
         sudo: {
-          users: [ 'vagrant' ],
+          users: [ "vagrant" ],
           passwordless: true
         }
       }

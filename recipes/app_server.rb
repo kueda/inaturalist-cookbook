@@ -18,15 +18,17 @@
 #
 
 # Set configs based on node searches
-if postgres_nodes = custom_search_nodes("chef_environment:#{node.chef_environment} AND recipes:inaturalist-cookbook\\:\\:postgresql_server")
+postgres_nodes = custom_search_nodes("chef_environment:#{node.chef_environment} AND recipes:inaturalist-cookbook\\:\\:postgresql_server")
+unless blank?(postgres_nodes)
   node.default["inaturalist"]["db"]["host"] = postgres_nodes.first["ipaddress"]
 end
-if memcached_nodes = custom_search_nodes("chef_environment:#{node.chef_environment} AND recipes:inaturalist-cookbook\\:\\:memcached_server")
+memcached_nodes = custom_search_nodes("chef_environment:#{node.chef_environment} AND recipes:inaturalist-cookbook\\:\\:memcached_server")
+unless blank?(memcached_nodes)
   node.default["inaturalist"]["memcached_host"] = memcached_nodes.first["ipaddress"]
 end
 
-node.default["inaturalist"]["db"]["host"] ||= node_data(node)[:ipaddress]
-node.default["inaturalist"]["memcached_host"] ||= node_data(node)[:ipaddress]
+node.default["inaturalist"]["db"]["host"] ||= node_data(node)["ipaddress"]
+node.default["inaturalist"]["memcached_host"] ||= node_data(node)["ipaddress"]
 
 # Install packages
 %w(nodejs libgeos-dev libgeos++-dev zip gdal-bin default-jre).each do |pkg|

@@ -1,5 +1,5 @@
 # nfs
-<%- node["all_nodes"].each do |server| -%>
+<%- node.run_state["all_nodes"].each do |server| -%>
 # <%= server["name"] %>
 -A INPUT -p tcp -s  <%= server["ipaddress"] %> --dport 111 -j ACCEPT
 -A INPUT -p tcp -s  <%= server["ipaddress"] %> --dport 2049 -j ACCEPT

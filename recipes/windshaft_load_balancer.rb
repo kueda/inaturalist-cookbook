@@ -17,8 +17,8 @@
 # limitations under the License.
 #
 
-node.default["windshaft_servers"] = custom_search_nodes("role:windshaft_server")
-node.default["windshaft_servers"] ||= [ { name: "localhost", ipaddress: "localhost" } ]
+node.run_state["windshaft_servers"] = custom_search_nodes("chef_environment:#{node.chef_environment} AND role:windshaft_server")
+node.run_state["windshaft_servers"] ||= [ { name: "localhost", ipaddress: "localhost" } ]
 
 iptables_rule "firewall_b_windshaft_load_balancer"
 

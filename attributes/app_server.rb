@@ -37,6 +37,8 @@ default["inaturalist"]["info_email"] = "info@yoursite.org"
 default["inaturalist"]["memcached_host"] = "127.0.0.1"
 default["inaturalist"]["assets_host"] = nil
 default["inaturalist"]["statsd_host"] = nil
+default["inaturalist"]["windshaft_url"] = "http://127.0.0.1:4000"
+
 
 default["inaturalist"]["sphinx"] ||= { }
 default["inaturalist"]["sphinx"]["host"] = "127.0.0.1"

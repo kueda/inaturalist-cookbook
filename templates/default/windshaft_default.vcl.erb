@@ -1,7 +1,7 @@
 vcl 4.0;
 import directors;
 
-<%- node["windshaft_servers"].each do |server| -%>
+<%- node.run_state["windshaft_servers"].each do |server| -%>
 backend <%= server["name"] %> {
   .host = "<%= server["ipaddress"] %>";
   .port = "4000";
@@ -10,7 +10,7 @@ backend <%= server["name"] %> {
 
 sub vcl_init {
     new cluster1 = directors.round_robin();
-    <%- node["windshaft_servers"].each do |server| -%>
+    <%- node.run_state["windshaft_servers"].each do |server| -%>
     cluster1.add_backend(<%= server["name"] %>);
     <%- end -%>
 }

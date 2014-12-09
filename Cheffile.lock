@@ -16,6 +16,7 @@ SITE
     build-essential (2.1.2)
     chef-server (2.1.6)
     chef-sugar (2.4.1)
+    chef_gem (0.1.0)
     chef_handler (1.1.6)
     cron (1.6.1)
     curl (2.0.0)
@@ -26,6 +27,9 @@ SITE
       yum (~> 3.0)
       yum-epel (>= 0.0.0)
       yum-erlang_solutions (>= 0.0.0)
+    fail2ban (2.2.1)
+      yum (~> 3.0)
+      yum-epel (>= 0.0.0)
     git (4.0.2)
       build-essential (>= 0.0.0)
       dmg (>= 0.0.0)
@@ -43,12 +47,15 @@ SITE
       python (>= 0.0.0)
       runit (~> 1.0)
       yum-epel (>= 0.0.0)
+    hostsfile (2.4.5)
     iptables (0.14.0)
     logrotate (1.7.0)
     memcached (1.7.2)
       runit (~> 1.0)
       yum (~> 3.0)
       yum-epel (>= 0.0.0)
+    mysql (5.6.1)
+      yum-mysql-community (>= 0.0.0)
     nginx (2.7.4)
       apt (~> 2.2)
       bluepill (~> 2.3)
@@ -61,6 +68,10 @@ SITE
     openssl (2.0.0)
       chef-sugar (>= 0.0.0)
     pacman (1.1.1)
+    percona (0.15.5)
+      apt (>= 1.9)
+      openssl (>= 0.0.0)
+      yum (~> 3.0)
     postfix (3.6.0)
     postgresql (3.4.10)
       apt (>= 1.9.0)
@@ -85,6 +96,14 @@ SITE
       redisio (>= 1.7.0)
       windows (>= 1.8.8)
       yum (>= 0.0.0)
+    sphinx (1.1.0)
+      apt (>= 0.0.0)
+      build-essential (>= 1.1.2)
+      mysql (>= 0.0.0)
+      percona (>= 0.0.0)
+      postgresql (>= 1.0.0)
+      yum (>= 0.0.0)
+      yum-epel (>= 0.0.0)
     sudo (2.7.1)
     timezone (0.0.1)
     uchiwa (0.5.0)
@@ -101,6 +120,8 @@ SITE
       yum (~> 3.0)
     yum-erlang_solutions (0.2.0)
       yum (~> 3.0)
+    yum-mysql-community (0.1.10)
+      yum (>= 3.0)
 
 GIT
   remote: git://github.com/JeanMertz/chef-client.git
@@ -114,10 +135,11 @@ GIT
 
 GIT
   remote: git://github.com/fnichol/chef-rvm.git
-  ref: v0.9.0
-  sha: 4a408e5d6c5a52c37388a799c516430263339849
+  ref: 0790c409f14c2ef76fc2fe7cb1024fbf4a740a7b
+  sha: 0790c409f14c2ef76fc2fe7cb1024fbf4a740a7b
   specs:
-    rvm (0.9.0)
+    rvm (0.10.1)
+      chef_gem (>= 0.0.0)
 
 GIT
   remote: git://github.com/librato/statsd-cookbook.git
@@ -222,13 +244,17 @@ DEPENDENCIES
   collectd_plugins (>= 0)
   curl (>= 0)
   disable_ipv6 (>= 0)
+  fail2ban (>= 0)
   git (>= 0)
   git (>= 0)
+  hostsfile (>= 0)
   inaturalist-cookbook (>= 0)
+  iptables (>= 0)
   monitor (>= 0)
   nodejs (>= 0)
   postgresql (~> 3.4.1)
   rvm (>= 0)
+  sphinx (>= 0)
   statsd (>= 0)
   sudo (>= 0)
   varnish (>= 0)

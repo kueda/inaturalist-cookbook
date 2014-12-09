@@ -18,7 +18,7 @@
 #
 
 node.default["postgresql"]["pg_hba"] = [ ]
-node["all_nodes"].each do |server|
+node.run_state["all_nodes"].each do |server|
   node.default["postgresql"]["pg_hba"] << {
     "type" => "host",
     "db" => "all",
@@ -28,9 +28,9 @@ node["all_nodes"].each do |server|
   }
 end
 
-node.default["inaturalist"]["db"]["host"] = node_data(node)[:ipaddress]
+node.default["inaturalist"]["db"]["host"] = node_data(node)["ipaddress"]
 node.default["inaturalist"]["db"]["restore_host"] = node.default["inaturalist"]["db"]["host"]
-node.default["postgresql"]["config"]["listen_addresses"] = node_data(node)[:ipaddress]
+node.default["postgresql"]["config"]["listen_addresses"] = node_data(node)["ipaddress"]
 
 node.default["postgresql"]["config_pgtune"]["db_type"] = "web"
 node.default["postgresql"]["config_pgtune"]["max_connections"] = 100

@@ -17,10 +17,10 @@
 # limitations under the License.
 #
 
-node.default["all_nodes"] ||= [ ]
-node.default["all_nodes"].each do |n|
-  hostsfile_entry n[:ipaddress] do
-    hostname  n[:name]
+node.run_state["all_nodes"] ||= [ ]
+node.run_state["all_nodes"].each do |n|
+  hostsfile_entry n["ipaddress"] do
+    hostname  n["name"]
     action    :create_if_missing
   end
 end
