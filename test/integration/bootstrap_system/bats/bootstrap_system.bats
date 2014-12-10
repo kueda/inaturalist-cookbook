@@ -8,6 +8,10 @@
   which vim
 }
 
+@test "emacs binary is found in PATH" {
+  which emacs
+}
+
 @test "curl binary is found in PATH" {
   which curl
 }

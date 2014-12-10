@@ -11,6 +11,7 @@ version          "0.1.9"
     apt
     sudo
     vim
+    emacs
     rvm
     curl
     build-essential
